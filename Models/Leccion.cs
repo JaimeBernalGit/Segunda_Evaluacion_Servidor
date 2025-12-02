@@ -5,16 +5,16 @@ public class Leccion
     public string Titulo { get; set; }
     public string ContenidoUrl { get; set; }
     public int DuracionMin { get; set; }
-    public int Orden { get; set; }
+    public string Descripción { get; set; }
 
     public Leccion(){}
 
-    public Leccion(Curso curso, string titulo, string contenidoUrl, int duracionMin, int orden)
+    public Leccion(Curso curso, string titulo, string contenidoUrl, int duracionMin, string descripción)
     {
         Curso = curso;
         Titulo = titulo;
         ContenidoUrl = contenidoUrl;
         DuracionMin = duracionMin;
-        Orden = orden;
+        Descripción = descripción;
     }
 }
