@@ -16,5 +16,6 @@ public class Leccion
         ContenidoUrl = contenidoUrl;
         DuracionMin = duracionMin;
         Descripción = descripción;
+
     }
 }

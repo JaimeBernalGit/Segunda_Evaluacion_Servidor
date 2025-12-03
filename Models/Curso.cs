@@ -1,5 +1,6 @@
-public enum Nivel{Basico,Intermedio,Avanzado}
-public class Curso{
+public enum Nivel { Basico, Intermedio, Avanzado }
+public class Curso
+{
     public int Id { get; set; }
     public string Titulo { get; set; }
     public string Descripcion { get; set; }
@@ -7,14 +8,17 @@ public class Curso{
     public Nivel Nivel { get; set; }
     public DateTime Fecha_Creacion { get; set; }
 
-    public Curso(){}
+    public int Precio { get; set; }
 
-    public Curso(string titulo, string descripcion, string categoria, Nivel nivel, DateTime fecha_Creacion)
+    public Curso() { }
+
+    public Curso(string titulo, string descripcion, string categoria, Nivel nivel, DateTime fecha_Creacion, int precio)
     {
         Titulo = titulo;
         Descripcion = descripcion;
         Categoria = categoria;
         Nivel = nivel;
         Fecha_Creacion = fecha_Creacion;
+        Precio = precio;
     }
 }

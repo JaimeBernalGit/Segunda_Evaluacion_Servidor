@@ -4,20 +4,20 @@ public class Pago{
     public Usuario Usuario { get; set; }
     public Curso Curso { get; set; }
     public int Cantidad { get; set; }
-    public string Holder_Name { get; set; }
-    public string Holder_Number { get; set; }
+    public string Nombre_Titular{ get; set; }
+    public string Numero_Titular { get; set; }
     public int CVV { get; set; }
 
     public Pago(){}
 
-    public Pago(int id, Usuario usuario, Curso curso, int cantidad, string holder_Name, string holder_Number, int cVV)
+    public Pago(int id, Usuario usuario, Curso curso, int cantidad, string nombre_Titular, string numero_Titular, int cVV)
     {
         Id = id;
         Usuario = usuario;
         Curso = curso;
         Cantidad = cantidad;
-        Holder_Name = holder_Name;
-        Holder_Number = holder_Number;
+        Nombre_Titular = nombre_Titular;
+        Numero_Titular = numero_Titular;
         CVV = cVV;
     }
 }
