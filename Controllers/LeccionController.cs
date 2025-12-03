@@ -36,15 +36,28 @@ namespace CursosAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Leccion>> CreateLeccion(Leccion leccion)
         {
-   
+            await _service.AddAsync(leccion);
             return Ok();
         }
 
 
        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLeccion(Leccion leccion)
+        public async Task<IActionResult> UpdateLeccion(int id, Leccion updatedLeccion)
         {
+            var existingLeccion = await _service.GetByIdAsync(id);
+            if (existingLeccion == null)
+            {
+                return NotFound();
+            }
 
+            existingLeccion.Curso = updatedLeccion.Curso;
+            existingLeccion.Id = updatedLeccion.Id;
+            existingLeccion.ContenidoUrl = updatedLeccion.ContenidoUrl;
+            existingLeccion.Descripción = updatedLeccion.Descripción;
+            existingLeccion.DuracionMin = updatedLeccion.DuracionMin;
+            existingLeccion.Titulo = updatedLeccion.Titulo;
+
+            await _service.UpdateAsync(existingLeccion);
             return NoContent();
         }
   

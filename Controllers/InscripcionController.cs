@@ -36,15 +36,28 @@ namespace CursosAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Inscripcion>> CreateInscripcion(Inscripcion inscripcion)
         {
-   
+            await _service.AddAsync(inscripcion);
             return Ok();
         }
 
 
        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateInscripcion(Inscripcion inscripcion)
+        public async Task<IActionResult> UpdateInscripcion(int id, Inscripcion updatedInscripcion)
         {
+            var existingInscripcion = await _service.GetByIdAsync(id);
+            if (existingInscripcion == null)
+            {
+                return NotFound();
+            }
 
+            existingInscripcion.Curso = updatedInscripcion.Curso;
+            existingInscripcion.Id = updatedInscripcion.Id;
+            existingInscripcion.Estado = updatedInscripcion.Estado;
+            existingInscripcion.FechaInscripcion = updatedInscripcion.FechaInscripcion;
+            existingInscripcion.ProgresoPorcentaje = updatedInscripcion.ProgresoPorcentaje;
+            existingInscripcion.Usuario = updatedInscripcion.Usuario;
+
+            await _service.UpdateAsync(existingInscripcion);
             return NoContent();
         }
   

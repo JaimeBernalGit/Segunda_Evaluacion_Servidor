@@ -36,15 +36,28 @@ namespace CursosAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Usuario>> CreateUsuario(Usuario usuario)
         {
-   
+            await _service.AddAsync(usuario);
             return Ok();
         }
 
 
        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUsuario(Usuario usuario)
+        public async Task<IActionResult> UpdateUsuario(int id, Usuario updatedUsuario)
         {
+            var existingUsuario = await _service.GetByIdAsync(id);
+            if (existingUsuario == null)
+            {
+                return NotFound();
+            }
 
+            existingUsuario.Correo = updatedUsuario.Correo;
+            existingUsuario.Id = updatedUsuario.Id;
+            existingUsuario.Estado = updatedUsuario.Estado;
+            existingUsuario.Direccion = updatedUsuario.Direccion;
+            existingUsuario.Nombre = updatedUsuario.Nombre;
+            existingUsuario.Fecha_Registro = updatedUsuario.Fecha_Registro;
+
+            await _service.UpdateAsync(existingUsuario);
             return NoContent();
         }
   

@@ -36,15 +36,28 @@ namespace CursosAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Reseña>> CreateReseña(Reseña reseña)
         {
-   
+            await _service.AddAsync(reseña);
             return Ok();
         }
 
 
        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateReseña(Reseña reseña)
+        public async Task<IActionResult> UpdateReseña(int id, Reseña updatedReseña)
         {
+            var existingReseña = await _service.GetByIdAsync(id);
+            if (existingReseña == null)
+            {
+                return NotFound();
+            }
 
+            existingReseña.Curso = updatedReseña.Curso;
+            existingReseña.Id = updatedReseña.Id;
+            existingReseña.Calificacion = updatedReseña.Calificacion;
+            existingReseña.Comentario = updatedReseña.Comentario;
+            existingReseña.FechaPublicacion = updatedReseña.FechaPublicacion;
+            existingReseña.Usuario = updatedReseña.Usuario;
+
+            await _service.UpdateAsync(existingReseña);
             return NoContent();
         }
   

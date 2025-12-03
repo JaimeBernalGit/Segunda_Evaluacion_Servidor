@@ -36,15 +36,29 @@ namespace CursosAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Pago>> CreatePago(Pago pago)
         {
-   
+            await _service.AddAsync(pago);
             return Ok();
         }
 
 
        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePago(Pago pago)
+        public async Task<IActionResult> UpdatePago(int id, Pago updatedPago)
         {
+            var existingPago = await _service.GetByIdAsync(id);
+            if (existingPago == null)
+            {
+                return NotFound();
+            }
 
+            existingPago.Curso = updatedPago.Curso;
+            existingPago.Id = updatedPago.Id;
+            existingPago.Cantidad = updatedPago.Cantidad;
+            existingPago.Holder_Name = updatedPago.Holder_Name;
+            existingPago.Holder_Number = updatedPago.Holder_Number;
+            existingPago.Usuario = updatedPago.Usuario;
+            existingPago.CVV = updatedPago.CVV;
+
+            await _service.UpdateAsync(existingPago);
             return NoContent();
         }
   
