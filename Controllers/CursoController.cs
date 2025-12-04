@@ -5,19 +5,19 @@ using Models;
 
 namespace CursosAPI.Controllers
 {
-   [Route("api/[controller]")]
-   [ApiController]
-   public class CursoController : ControllerBase
-   {
-    private static List<Curso> Cursos = new List<Curso>();
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CursoController : ControllerBase
+    {
+        private static List<Curso> Cursos = new List<Curso>();
 
-    private readonly ICursoRepository _cursoRepository;
+        private readonly ICursoRepository _cursoRepository;
 
-    public CursoController(ICursoRepository cursoRepository)
+        public CursoController(ICursoRepository cursoRepository)
         {
             _cursoRepository = cursoRepository;
         }
-    
+
         [HttpGet]
         public async Task<ActionResult<List<Curso>>> GetCursos()
         {
@@ -36,13 +36,26 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Curso>> CreateCurso(Curso Curso)
+        public async Task<ActionResult<Curso>> CreateCurso(CursoCreateDTO Curso)
         {
-            await _cursoRepository.AddAsync(Curso);
-            return CreatedAtAction(nameof(GetCurso), new { id = Curso.Id }, Curso);
+            var newId = await _cursoRepository.AddAsync(Curso);
+
+            var CursoCreado = new Curso
+            {
+                Id = newId,
+                Titulo = Curso.Titulo,
+                Descripcion = Curso.Descripcion,
+                Categoria = Curso.Categoria,
+                Nivel = Curso.Nivel,
+                Precio = Curso.Precio,
+                Fecha_Creacion = DateTime.Now
+            };
+
+
+            return CreatedAtAction(nameof(GetCurso), new { id = newId }, CursoCreado);
         }
 
-       [HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCurso(int id, Curso updatedCurso)
         {
             var existingCurso = await _cursoRepository.GetByIdAsync(id);
@@ -61,18 +74,18 @@ namespace CursosAPI.Controllers
             return NoContent();
         }
 
-       [HttpDelete("{id}")]
-       public async Task<IActionResult> DeleteCurso(int id)
-       {
-           var Curso = await _cursoRepository.GetByIdAsync(id);
-           if (Curso == null)
-           {
-               return NotFound();
-           }
-           await _cursoRepository.DeleteAsync(id);
-           return NoContent();
-       }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCurso(int id)
+        {
+            var Curso = await _cursoRepository.GetByIdAsync(id);
+            if (Curso == null)
+            {
+                return NotFound();
+            }
+            await _cursoRepository.DeleteAsync(id);
+            return NoContent();
+        }
 
 
-   }
+    }
 }
