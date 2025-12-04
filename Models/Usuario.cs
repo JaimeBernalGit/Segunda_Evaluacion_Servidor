@@ -4,7 +4,7 @@ public class Usuario
     public int Id { get; set; }
     public string Nombre { get; set; }
     public string Nombre_Usuario { get; set; }
-    public string Passwword { get; set; }
+    public string Password { get; set; }
     public string Correo { get; set; }
     public string Direccion { get; set; }
     public DateTime Fecha_Registro { get; set; }
@@ -16,10 +16,11 @@ public class Usuario
     {
         Nombre = nombre;
         Nombre_Usuario = nombre_Usuario;
-        Passwword = password;
+        Password = password;
         Correo = correo;
         Direccion = direccion;
         Fecha_Registro = fecha_Registro;
         Estado = estado;
     }
+    
 }
