@@ -1,12 +1,12 @@
 USE GestionCursosDB;
-GO
+
 
 INSERT INTO Usuario (nombre, nombre_usuario, password, email, estado)
 VALUES 
 ('Ana García', 'ana_g', 'pass1234', 'ana@email.com', 'activo'),
 ('Pedro Martínez', 'pedro_dev', 'claveSegura', 'pedro@email.com', 'activo'),
 ('Lucía Fernández', 'lucia_art', 'arte2024', 'lucia@email.com', 'suspendido');
-GO
+
 
 
 INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio)
@@ -14,7 +14,7 @@ VALUES
 ('Python para Principiantes', 'Domina los fundamentos de la programación con Python.', 'Programación', 'Básico', 15.50),
 ('Fotografía Profesional', 'Aprende iluminación y composición avanzada.', 'Arte', 'Avanzado', 45.00),
 ('Marketing Digital 360', 'Estrategias de SEO, SEM y Redes Sociales.', 'Negocios', 'Intermedio', 29.99);
-GO
+
 
 
 INSERT INTO Leccion (curso_id, titulo, contenido_url, duracion_min, descripcion)
@@ -33,7 +33,7 @@ VALUES
 INSERT INTO Leccion (curso_id, titulo, contenido_url, duracion_min, descripcion)
 VALUES 
 (3, 'Introducción al SEO', 'video_url_6', 20, 'Posicionamiento orgánico');
-GO
+
 
 
 INSERT INTO Pago (usuario_id, curso_id, cantidad, nombre_titular, numero_titular, cvv)
@@ -46,7 +46,7 @@ VALUES (1, 3, 29.99, 'Ana García', '4000123456789010', '123');
 
 INSERT INTO Pago (usuario_id, curso_id, cantidad, nombre_titular, numero_titular, cvv)
 VALUES (2, 2, 45.00, 'Pedro Martínez', '5000987654321098', '999');
-GO
+
 
 
 INSERT INTO Inscripcion (usuario_id, curso_id, progreso_porcentaje, estado)
@@ -58,7 +58,7 @@ VALUES (1, 3, 15.50, 'cursando');
 
 INSERT INTO Inscripcion (usuario_id, curso_id, progreso_porcentaje, estado)
 VALUES (2, 2, 50.00, 'cursando');
-GO
+
 
 
 INSERT INTO Resena (usuario_id, curso_id, calificacion, comentario)
@@ -67,4 +67,3 @@ VALUES (1, 1, 5, 'Excelente curso, muy bien explicado para principiantes.');
 
 INSERT INTO Resena (usuario_id, curso_id, calificacion, comentario)
 VALUES (2, 2, 3, 'Buen contenido, pero el audio de los videos es bajo.');
-GO

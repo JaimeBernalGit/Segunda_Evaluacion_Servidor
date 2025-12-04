@@ -1,9 +1,8 @@
 
 CREATE DATABASE GestionCursosDB;
-GO 
+
 
 USE GestionCursosDB;
-GO
 
 CREATE TABLE Usuario (
     usuario_id INT IDENTITY(1,1) PRIMARY KEY,

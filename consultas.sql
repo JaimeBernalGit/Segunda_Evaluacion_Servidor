@@ -1,5 +1,5 @@
 USE GestionCursosDB;
-GO
+
 
 SELECT titulo, categoria, nivel, precio
 FROM Curso

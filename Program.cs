@@ -1,7 +1,12 @@
 
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("CursosDB");
+var connectionString = builder.Configuration.GetConnectionString("GestionCursosDB");
+
+
+//Repositories
+
+
 
 
 // Add services to the container.

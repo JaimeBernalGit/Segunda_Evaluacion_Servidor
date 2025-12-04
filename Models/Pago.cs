@@ -1,3 +1,4 @@
+namespace Models;
 public class Pago{
 
     public int Id { get; set; }

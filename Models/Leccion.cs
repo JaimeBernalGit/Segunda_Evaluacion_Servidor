@@ -1,3 +1,4 @@
+namespace Models;
 public class Leccion
 {
     public int Id { get; set; }
