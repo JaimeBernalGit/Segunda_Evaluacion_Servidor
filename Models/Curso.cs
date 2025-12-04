@@ -8,11 +8,11 @@ public class Curso
     public string Nivel { get; set; }
     public DateTime Fecha_Creacion { get; set; }
 
-    public int Precio { get; set; }
+    public double Precio { get; set; }
 
     public Curso() { }
 
-    public Curso(string titulo, string descripcion, string categoria, string nivel, DateTime fecha_Creacion, int precio)
+    public Curso(string titulo, string descripcion, string categoria, string nivel, DateTime fecha_Creacion, double precio)
     {
         Titulo = titulo;
         Descripcion = descripcion;

@@ -20,7 +20,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT Id, Nombre, Precio, EsAlcoholica FROM Curso";
+                string query = "SELECT curso_id, titulo, descripcion, categoria, nivel, fecha_creacion, precio FROM Curso";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -34,9 +34,10 @@ namespace CursosAPI.Repositories
                                 Descripcion = reader.GetString(2),
                                 Categoria = reader.GetString(3),
                                 Nivel = reader.GetString(4),
-                                Fecha_Creacion = reader.GetString(4),
+                                Fecha_Creacion = reader.GetDateTime(5),
+                                Precio = Convert.ToDouble(reader.GetDecimal(6))
 
-                            }; 
+                            };
 
                             Cursos.Add(Curso);
                         }
@@ -54,10 +55,10 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT Id, Nombre, Precio, EsAlcoholica FROM Curso WHERE Id = @Id";
+                string query = "SELECT curso_id, titulo, descripcion, categoria, nivel, fecha_creacion, precio FROM Curso WHERE curso_id = @curso_id";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@curso_id", id);
 
                     using (var reader = await command.ExecuteReaderAsync())
                     {
@@ -66,9 +67,12 @@ namespace CursosAPI.Repositories
                             Curso = new Curso
                             {
                                 Id = reader.GetInt32(0),
-                                Nombre = reader.GetString(1),
-                                Precio = Convert.ToDouble(reader.GetDecimal(2)),
-                                EsAlcoholica = reader.GetBoolean(3)
+                                Titulo = reader.GetString(1),
+                                Descripcion = reader.GetString(2),
+                                Categoria = reader.GetString(3),
+                                Nivel = reader.GetString(4),
+                                Fecha_Creacion = reader.GetDateTime(5),
+                                Precio = Convert.ToDouble(reader.GetDecimal(6))
                             };
                         }
                     }
@@ -83,12 +87,14 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO Curso (Nombre, Precio, EsAlcoholica) VALUES (@Nombre, @Precio, @EsAlcoholica)";
+                string query = "INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio) VALUES (@titulo, @descripcion, @categoria, @nivel, @precio)";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Nombre", Curso.Nombre);
-                    command.Parameters.AddWithValue("@Precio", Curso.Precio);
-                    command.Parameters.AddWithValue("@EsAlcoholica", Curso.EsAlcoholica);
+                    command.Parameters.AddWithValue("@titulo", Curso.Titulo);
+                    command.Parameters.AddWithValue("@descripcion", Curso.Descripcion);
+                    command.Parameters.AddWithValue("@categoria", Curso.Categoria);
+                    command.Parameters.AddWithValue("@nivel", Curso.Nivel);
+                    command.Parameters.AddWithValue("@precio", Curso.Precio);
 
                     await command.ExecuteNonQueryAsync();
                 }
@@ -101,13 +107,15 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE Curso SET Nombre = @Nombre, Precio = @Precio, EsAlcoholica = @EsAlcoholica WHERE Id = @Id";
+                string query = "UPDATE Curso SET titulo = @titulo, descripcion = @descripcion, categoria = @categoria, nivel = @nivel, precio = @precio WHERE curso_id = @curso_id";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", Curso.Id);
-                    command.Parameters.AddWithValue("@Nombre", Curso.Nombre);
-                    command.Parameters.AddWithValue("@Precio", Curso.Precio);
-                    command.Parameters.AddWithValue("@EsAlcoholica", Curso.EsAlcoholica);
+                    command.Parameters.AddWithValue("@curso_id", Curso.Id);
+                    command.Parameters.AddWithValue("@titulo", Curso.Titulo);
+                    command.Parameters.AddWithValue("@descripcion", Curso.Descripcion);
+                    command.Parameters.AddWithValue("@categoria", Curso.Categoria);
+                    command.Parameters.AddWithValue("@nivel", Curso.Nivel);
+                    command.Parameters.AddWithValue("@precio", Curso.Precio);
 
                     await command.ExecuteNonQueryAsync();
                 }
@@ -120,17 +128,17 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "DELETE FROM Curso WHERE Id = @Id";
+                string query = "DELETE FROM Curso WHERE curso_id = @curso_id";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@Id", id);
+                    command.Parameters.AddWithValue("@curso_id", id);
 
                     await command.ExecuteNonQueryAsync();
                 }
             }
         }
 
-        
+
 
 
     }
