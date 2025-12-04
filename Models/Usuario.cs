@@ -1,4 +1,4 @@
-public enum EstadoU { Activo, Inactivo }
+
 public class Usuario
 {
     public int Id { get; set; }
@@ -8,11 +8,11 @@ public class Usuario
     public string Correo { get; set; }
     public string Direccion { get; set; }
     public DateTime Fecha_Registro { get; set; }
-    public EstadoU Estado { get; set; }
+    public string Estado { get; set; }
 
     public Usuario() { }
 
-    public Usuario(string nombre, string nombre_Usuario, string password, string correo, string direccion, DateTime fecha_Registro, EstadoU estado)
+    public Usuario(string nombre, string nombre_Usuario, string password, string correo, string direccion, DateTime fecha_Registro, string estado)
     {
         Nombre = nombre;
         Nombre_Usuario = nombre_Usuario;
@@ -22,5 +22,5 @@ public class Usuario
         Fecha_Registro = fecha_Registro;
         Estado = estado;
     }
-    
+
 }
