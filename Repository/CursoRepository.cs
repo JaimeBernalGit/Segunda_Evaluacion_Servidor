@@ -81,7 +81,7 @@ namespace CursosAPI.Repositories
             return Curso;
         }
 
-        public async Task AddAsync(CursoCreateDTO Curso)
+        public async Task AddAsync(Curso Curso)
         {
        
             using (var connection = new SqlConnection(_connectionString))

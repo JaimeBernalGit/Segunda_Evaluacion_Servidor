@@ -51,7 +51,18 @@ namespace CursosAPI.Services
                 throw new InvalidOperationException($"El curso '{curso.Titulo}' no puede tener un precio menor o igual a 0");
             }
 
-            await _cursoRepository.AddAsync(curso);
+            //Se crea un nuevo objeto curso que contenga todo lo que necesita base de datos
+            var cursoNuevo = new Curso
+            {
+                Titulo = curso.Titulo,
+                Descripcion = curso.Descripcion,
+                Categoria = curso.Categoria, 
+                Nivel = curso.Nivel,         
+                Precio = curso.Precio,
+                Fecha_Creacion = DateTime.Now
+            };
+
+            await _cursoRepository.AddAsync(cursoNuevo);
 
 
         }
