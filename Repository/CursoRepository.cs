@@ -81,13 +81,14 @@ namespace CursosAPI.Repositories
             return Curso;
         }
 
-        public async Task<int> AddAsync(CursoCreateDTO Curso)
+        public async Task AddAsync(CursoCreateDTO Curso)
         {
+       
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio) VALUES (@titulo, @descripcion, @categoria, @nivel, @precio) SELECT SCOPE_IDENTITY();";
+                string query = "INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio) VALUES (@titulo, @descripcion, @categoria, @nivel, @precio);";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@titulo", Curso.Titulo);
@@ -95,10 +96,7 @@ namespace CursosAPI.Repositories
                     command.Parameters.AddWithValue("@categoria", Curso.Categoria);
                     command.Parameters.AddWithValue("@nivel", Curso.Nivel);
                     command.Parameters.AddWithValue("@precio", Curso.Precio);
-
-                    //Ejecuta la orden y lee el primer dato que devuelve la base de datos
-                    var result = await command.ExecuteScalarAsync();
-                    return Convert.ToInt32(result);
+                    await command.ExecuteNonQueryAsync();
                 }
             }
         }

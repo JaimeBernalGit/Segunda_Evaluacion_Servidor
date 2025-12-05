@@ -1,6 +1,7 @@
 
 
 using CursosAPI.Repositories;
+using CursosAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("GestionCursosDB");
@@ -9,6 +10,11 @@ var connectionString = builder.Configuration.GetConnectionString("GestionCursosD
 //Repositories
 
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+
+
+
+//Services
+builder.Services.AddScoped<ICursoService, CursoService>();
 
 
 // Add services to the container.

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using CursosAPI.Repositories;
+using CursosAPI.Services;
 using Models;
-// using CursosAPI.Services;
+
 
 namespace CursosAPI.Controllers
 {
@@ -9,25 +9,24 @@ namespace CursosAPI.Controllers
     [ApiController]
     public class CursoController : ControllerBase
     {
-        private static List<Curso> Cursos = new List<Curso>();
+        private readonly ICursoService _cursoService;
 
-        private readonly ICursoRepository _cursoRepository;
-
-        public CursoController(ICursoRepository cursoRepository)
+        public CursoController(ICursoService cursoRepository)
         {
-            _cursoRepository = cursoRepository;
+            _cursoService = cursoRepository;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Curso>>> GetCursos()
         {
-            var Cursos = await _cursoRepository.GetAllAsync();
+            var Cursos = await _cursoService.GetAllAsync();
             return Ok(Cursos);
         }
+
         [HttpGet("{id}")]
-        public async Task<ActionResult<Curso>> GetCurso(int id)
+        public async Task<ActionResult<Curso>> GetCursoById(int id)
         {
-            var Curso = await _cursoRepository.GetByIdAsync(id);
+            var Curso = await _cursoService.GetByIdAsync(id);
             if (Curso == null)
             {
                 return NotFound();
@@ -38,27 +37,14 @@ namespace CursosAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Curso>> CreateCurso(CursoCreateDTO Curso)
         {
-            var newId = await _cursoRepository.AddAsync(Curso);
-
-            var CursoCreado = new Curso
-            {
-                Id = newId,
-                Titulo = Curso.Titulo,
-                Descripcion = Curso.Descripcion,
-                Categoria = Curso.Categoria,
-                Nivel = Curso.Nivel,
-                Precio = Curso.Precio,
-                Fecha_Creacion = DateTime.Now
-            };
-
-
-            return CreatedAtAction(nameof(GetCurso), new { id = newId }, CursoCreado);
+            await _cursoService.AddAsync(Curso);
+            return NoContent();
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCurso(int id, Curso updatedCurso)
         {
-            var existingCurso = await _cursoRepository.GetByIdAsync(id);
+            var existingCurso = await _cursoService.GetByIdAsync(id);
             if (existingCurso == null)
             {
                 return NotFound();
@@ -70,19 +56,19 @@ namespace CursosAPI.Controllers
             existingCurso.Nivel = updatedCurso.Nivel;
             existingCurso.Precio = updatedCurso.Precio;
 
-            await _cursoRepository.UpdateAsync(existingCurso);
+            await _cursoService.UpdateAsync(existingCurso);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCurso(int id)
         {
-            var Curso = await _cursoRepository.GetByIdAsync(id);
+            var Curso = await _cursoService.GetByIdAsync(id);
             if (Curso == null)
             {
                 return NotFound();
             }
-            await _cursoRepository.DeleteAsync(id);
+            await _cursoService.DeleteAsync(id);
             return NoContent();
         }
 
