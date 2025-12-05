@@ -2,6 +2,7 @@ using CursosAPI.Repositories;
 using CursosAPI.Services;
 
 using CursosAPI.Repositories;
+using CursosAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("GestionCursosDB");

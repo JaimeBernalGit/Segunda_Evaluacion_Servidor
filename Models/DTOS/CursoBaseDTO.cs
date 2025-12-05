@@ -1,5 +1,5 @@
 namespace Models{
-public class CursoCreateDTO
+public class CursoBaseDTO
 {
 
     public string Titulo { get; set; }
@@ -8,9 +8,9 @@ public class CursoCreateDTO
     public string Nivel { get; set; }
     public double Precio { get; set; }
 
-    public CursoCreateDTO() { }
+    public CursoBaseDTO() { }
 
-    public CursoCreateDTO(string titulo, string descripcion, string categoria, string nivel, double precio)
+    public CursoBaseDTO(string titulo, string descripcion, string categoria, string nivel, double precio)
     {
         Titulo = titulo;
         Descripcion = descripcion;
