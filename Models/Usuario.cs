@@ -19,4 +19,5 @@ public class Usuario
         Fecha_Registro = fecha_Registro;
         Estado = estado;
     }
+
 }
