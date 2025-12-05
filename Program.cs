@@ -6,8 +6,14 @@ using CursosAPI.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("GestionCursosDB");
 
+//Repositories
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+
+
+//Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ICursoService, CursoService>();
 
 // Add services to the container.
 
