@@ -47,10 +47,13 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCurso(int id, [FromBody] Curso updatedCurso)
+        public async Task<IActionResult> UpdateCurso(int id, [FromBody] CursoUpdateDTO updatedCurso)
         {
-    
-            await _cursoService.UpdateAsync(updatedCurso);
+            
+            if(id<=0){
+                return BadRequest();
+            }
+            await _cursoService.UpdateAsync(id, updatedCurso);
             return NoContent();
 
         }

@@ -28,7 +28,7 @@ namespace CursosAPI.Services
             var curso = await _cursoRepository.GetByIdAsync(id);
             if (curso == null || curso.Id < 0)
             {
-                throw new ArgumentException("El ID debe ser mayor que cero o no existe.");
+                throw new KeyNotFoundException("El ID debe ser mayor que cero o no existe.");
             }
             return curso;
 
@@ -56,8 +56,8 @@ namespace CursosAPI.Services
             {
                 Titulo = curso.Titulo,
                 Descripcion = curso.Descripcion,
-                Categoria = curso.Categoria, 
-                Nivel = curso.Nivel,         
+                Categoria = curso.Categoria,
+                Nivel = curso.Nivel,
                 Precio = curso.Precio,
                 Fecha_Creacion = DateTime.Now
             };
@@ -67,31 +67,36 @@ namespace CursosAPI.Services
 
         }
 
-        public async Task UpdateAsync(Curso curso)
+        public async Task UpdateAsync(int id, CursoUpdateDTO curso)
         {
             try
             {
-                if (curso.Id <= 0)
-                {
-                    throw new ArgumentException("El ID del curso no es válido.");
-                }
-
                 if (curso.Precio <= 0)
                 {
                     throw new InvalidOperationException($"El precio no puede ser menor o igual a 0.");
                 }
 
-                var cursosOnline = await GetAllAsync();
+                var cursosOnline = await _cursoRepository.GetAllAsync();
 
+    
                 foreach (var cur in cursosOnline)
                 {
-                    if (cur.Titulo.Equals(curso.Titulo))
+                    if (cur.Titulo.Equals(curso.Titulo) && cur.Id != id)
                     {
+        
                         throw new InvalidOperationException($"El curso '{curso.Titulo}' ya existe en el catálogo.");
                     }
                 }
 
-                await _cursoRepository.UpdateAsync(curso);
+                var cursoExistente = await GetByIdAsync(id);
+
+                cursoExistente.Titulo = curso.Titulo;
+                cursoExistente.Descripcion = curso.Descripcion;
+                cursoExistente.Categoria = curso.Categoria;
+                cursoExistente.Nivel = curso.Nivel;
+                cursoExistente.Precio = curso.Precio;
+
+                await _cursoRepository.UpdateAsync(cursoExistente);
             }
             catch (ArgumentException ex)
             {
@@ -103,11 +108,7 @@ namespace CursosAPI.Services
 
                 throw new KeyNotFoundException(ex.Message);
             }
-            // Error generico de servidor
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
         }
 
         public async Task DeleteAsync(int id)
