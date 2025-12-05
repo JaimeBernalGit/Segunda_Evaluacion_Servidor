@@ -15,9 +15,23 @@ namespace CursosAPI.Services
             _cursoRepository = cursoRepository;
         }
 
-        public async Task<List<Curso>> GetAllAsync()
+        public async Task<List<Curso>> GetAllAsync(string? titulo = null, string? categoria = null)
         {
+
             var cursos = await _cursoRepository.GetAllAsync();
+
+            //StringComparison.OrdinalIgnoreCase evita problemas con mayusculas y minusculas
+            if (!string.IsNullOrEmpty(titulo))
+            {
+                cursos = cursos.Where(c => c.Titulo.Contains(titulo, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(categoria))
+            {
+                cursos = cursos.Where(c => c.Categoria.Equals(categoria, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+
             return cursos;
 
         }
@@ -78,12 +92,12 @@ namespace CursosAPI.Services
 
                 var cursosOnline = await _cursoRepository.GetAllAsync();
 
-    
+
                 foreach (var cur in cursosOnline)
                 {
                     if (cur.Titulo.Equals(curso.Titulo) && cur.Id != id)
                     {
-        
+
                         throw new InvalidOperationException($"El curso '{curso.Titulo}' ya existe en el catálogo.");
                     }
                 }
@@ -113,18 +127,13 @@ namespace CursosAPI.Services
 
         public async Task DeleteAsync(int id)
         {
-
-            try
+            var curso = await GetByIdAsync(id);
+            if (curso == null)
             {
-                await GetByIdAsync(id);
-
-                await _cursoRepository.DeleteAsync(id);
+                throw new KeyNotFoundException("El Curso no existe");
             }
 
-            catch (ArgumentException ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
+            await _cursoRepository.DeleteAsync(id);
 
         }
 

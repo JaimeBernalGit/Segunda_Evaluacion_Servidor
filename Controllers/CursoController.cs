@@ -19,12 +19,13 @@ namespace CursosAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Curso>>> GetCursos(
             [FromQuery] string? titulo,
-            [FromQuery] DateTime? fecha)
+            [FromQuery] string? categoria
+            )
 
         {
-            //Implementar metodo GetAllFilteredAsync()
-            var Cursos = await _cursoService.GetAllAsync();
-            return Ok(Cursos);
+            
+            var cursos = await _cursoService.GetAllAsync(titulo, categoria);
+            return Ok(cursos);
 
         }
 
