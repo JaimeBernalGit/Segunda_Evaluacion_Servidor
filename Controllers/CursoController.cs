@@ -17,10 +17,15 @@ namespace CursosAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Curso>>> GetCursos()
+        public async Task<ActionResult<List<Curso>>> GetCursos(
+            [FromQuery] string? titulo,
+            [FromQuery] DateTime? fecha)
+
         {
+            //Implementar metodo GetAllFilteredAsync()
             var Cursos = await _cursoService.GetAllAsync();
             return Ok(Cursos);
+
         }
 
         [HttpGet("{id}")]
@@ -42,34 +47,26 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCurso(int id, Curso updatedCurso)
+        public async Task<IActionResult> UpdateCurso(int id, [FromBody] Curso updatedCurso)
         {
-            var existingCurso = await _cursoService.GetByIdAsync(id);
-            if (existingCurso == null)
-            {
-                return NotFound();
-            }
-
-            existingCurso.Titulo = updatedCurso.Titulo;
-            existingCurso.Descripcion = updatedCurso.Descripcion;
-            existingCurso.Categoria = updatedCurso.Categoria;
-            existingCurso.Nivel = updatedCurso.Nivel;
-            existingCurso.Precio = updatedCurso.Precio;
-
-            await _cursoService.UpdateAsync(existingCurso);
+    
+            await _cursoService.UpdateAsync(updatedCurso);
             return NoContent();
+
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCurso(int id)
         {
-            var Curso = await _cursoService.GetByIdAsync(id);
-            if (Curso == null)
+            try
+            {
+                await _cursoService.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (ArgumentException)
             {
                 return NotFound();
             }
-            await _cursoService.DeleteAsync(id);
-            return NoContent();
         }
 
 

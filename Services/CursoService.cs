@@ -58,36 +58,62 @@ namespace CursosAPI.Services
 
         public async Task UpdateAsync(Curso curso)
         {
-            if (curso.Id <= 0)
+            try
             {
-                throw new ArgumentException("El ID del curso no es válido.");
-            }
-
-            if(curso.Precio <= 0)
-            {
-                throw new InvalidOperationException($"El precio no puede ser menor o igual a 0.");
-            }
-
-            await GetByIdAsync(curso.Id);
-
-
-
-            var cursosOnline = await GetAllAsync();
-
-            foreach (var cur in cursosOnline)
-            {
-                if (cur.Titulo.Equals(curso.Titulo))
+                if (curso.Id <= 0)
                 {
-                    throw new InvalidOperationException($"El curso '{curso.Titulo}' ya existe en el catálogo.");
+                    throw new ArgumentException("El ID del curso no es válido.");
                 }
+
+                if (curso.Precio <= 0)
+                {
+                    throw new InvalidOperationException($"El precio no puede ser menor o igual a 0.");
+                }
+
+                var cursosOnline = await GetAllAsync();
+
+                foreach (var cur in cursosOnline)
+                {
+                    if (cur.Titulo.Equals(curso.Titulo))
+                    {
+                        throw new InvalidOperationException($"El curso '{curso.Titulo}' ya existe en el catálogo.");
+                    }
+                }
+
+                await _cursoRepository.UpdateAsync(curso);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+            // Si el servicio no encontró el curso para actualizar
+            catch (KeyNotFoundException ex)
+            {
+
+                throw new KeyNotFoundException(ex.Message);
+            }
+            // Error generico de servidor
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
         public async Task DeleteAsync(int id)
         {
-            await GetByIdAsync(id);
 
-            await _cursoRepository.DeleteAsync(id);
+            try
+            {
+                await GetByIdAsync(id);
+
+                await _cursoRepository.DeleteAsync(id);
+            }
+
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+
         }
 
     }
