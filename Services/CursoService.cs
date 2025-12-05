@@ -23,11 +23,13 @@ namespace CursosAPI.Services
             //StringComparison.OrdinalIgnoreCase evita problemas con mayusculas y minusculas
             if (!string.IsNullOrEmpty(titulo))
             {
+                titulo = titulo.Trim();
                 cursos = cursos.Where(c => c.Titulo.Contains(titulo, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             if (!string.IsNullOrEmpty(categoria))
             {
+                categoria = categoria.Trim();
                 cursos = cursos.Where(c => c.Categoria.Equals(categoria, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 

@@ -23,7 +23,7 @@ namespace CursosAPI.Controllers
             )
 
         {
-            
+
             var cursos = await _cursoService.GetAllAsync(titulo, categoria);
             return Ok(cursos);
 
@@ -32,31 +32,51 @@ namespace CursosAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Curso>> GetCursoById(int id)
         {
-            var Curso = await _cursoService.GetByIdAsync(id);
-            if (Curso == null)
+            try
             {
-                return NotFound();
+                var curso = await _cursoService.GetByIdAsync(id);
+                return Ok(curso);
             }
-            return Ok(Curso);
+
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult<Curso>> CreateCurso(CursoCreateDTO Curso)
+        public async Task<ActionResult<Curso>> CreateCurso([FromBody] CursoCreateDTO Curso)
         {
-            await _cursoService.AddAsync(Curso);
-            return NoContent();
+            try
+            {
+                await _cursoService.AddAsync(Curso);
+                return Ok("Curso creado exitosamente");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCurso(int id, [FromBody] CursoUpdateDTO updatedCurso)
         {
-            
-            if(id<=0){
-                return BadRequest();
-            }
-            await _cursoService.UpdateAsync(id, updatedCurso);
-            return NoContent();
 
+            if (id <= 0) return BadRequest("El ID no es válido");
+
+            try
+            {
+                await _cursoService.UpdateAsync(id, updatedCurso);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -67,9 +87,10 @@ namespace CursosAPI.Controllers
                 await _cursoService.DeleteAsync(id);
                 return NoContent();
             }
-            catch (ArgumentException)
+            catch (KeyNotFoundException ex)
             {
-                return NotFound();
+
+                return NotFound(ex.Message);
             }
         }
 
