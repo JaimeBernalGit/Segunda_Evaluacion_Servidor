@@ -1,3 +1,4 @@
+using Models;
 namespace CursosAPI.Services
 {
     public interface IUsuarioService

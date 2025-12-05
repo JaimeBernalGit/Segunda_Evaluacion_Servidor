@@ -1,6 +1,6 @@
 using CursosAPI.Repositories;
 using CursosAPI.Services;
-
+using Models;
 using CursosAPI.Repositories;
 using CursosAPI.Services;
 

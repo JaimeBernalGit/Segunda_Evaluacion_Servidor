@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using Models;
 
 namespace CursosAPI.Repositories
 {

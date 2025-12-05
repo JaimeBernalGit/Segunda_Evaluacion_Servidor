@@ -1,3 +1,4 @@
+namespace Models;
 public class UpdateUsuarioDTO
 {
     public string Nombre { get; set; }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CursosAPI.Services;
-
+using Models;
 namespace CursosAPI.Controllers
 {
    [Route("api/[controller]")]

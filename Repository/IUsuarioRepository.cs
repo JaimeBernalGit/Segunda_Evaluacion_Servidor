@@ -1,3 +1,4 @@
+using Models;
 namespace CursosAPI.Repositories
 {
     public interface IUsuarioRepository

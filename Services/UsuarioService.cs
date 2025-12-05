@@ -1,5 +1,5 @@
 using CursosAPI.Repositories;
-
+using Models;
 namespace CursosAPI.Services
 {
     public class UsuarioService : IUsuarioService
