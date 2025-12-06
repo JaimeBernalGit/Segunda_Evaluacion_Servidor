@@ -107,7 +107,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE Inscripcion SET progreso_porcentaje = @progreso_porcentaje = @email, estado = @estado WHERE inscripcion_id = @inscripcion_id";
+                string query = "UPDATE Inscripcion SET progreso_porcentaje = @progreso_porcentaje, estado = @estado WHERE inscripcion_id = @inscripcion_id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@progreso_porcentaje", inscripcion.ProgresoPorcentaje);
