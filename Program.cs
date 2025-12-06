@@ -11,6 +11,7 @@ var connectionString = builder.Configuration.GetConnectionString("GestionCursosD
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 builder.Services.AddScoped<IResenaRepository, ResenaRepository>();
+builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
 
 //Services
