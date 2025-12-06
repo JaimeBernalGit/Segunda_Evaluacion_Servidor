@@ -16,6 +16,7 @@ builder.Services.AddScoped<IResenaRepository, ResenaRepository>();
 //Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICursoService, CursoService>();
+builder.Services.AddScoped<IResenaService, ResenaService>();
 
 // Add services to the container.
 

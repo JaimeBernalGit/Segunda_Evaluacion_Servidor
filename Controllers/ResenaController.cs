@@ -10,11 +10,11 @@ namespace ResenasAPI.Controllers
     [ApiController]
     public class ResenaController : ControllerBase
     {
-        private readonly IResenaRepository _resenaRepository;
+        private readonly IResenaService _resenaService;
 
-        public ResenaController(IResenaRepository resenaRepository)
+        public ResenaController(IResenaService resenaService )
         {
-            _resenaRepository = resenaRepository;
+            _resenaService = resenaService;
         }
 
         [HttpGet]
@@ -25,7 +25,7 @@ namespace ResenasAPI.Controllers
 
         {
 
-            var Resenas = await _resenaRepository.GetAllAsync();
+            var Resenas = await _resenaService.GetAllAsync(calificacion,fecha);
             return Ok(Resenas);
 
         }
@@ -35,7 +35,7 @@ namespace ResenasAPI.Controllers
         {
             try
             {
-                var Resena = await _resenaRepository.GetByIdAsync(id);
+                var Resena = await _resenaService.GetByIdAsync(id);
                 return Ok(Resena);
             }
 
@@ -50,7 +50,7 @@ namespace ResenasAPI.Controllers
         {
             try
             {
-                await _resenaRepository.AddAsync(Resena);
+                await _resenaService.AddAsync(Resena);
                 return Ok("Resena creado exitosamente");
             }
             catch (InvalidOperationException ex)
@@ -60,16 +60,12 @@ namespace ResenasAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateResena(int id, [FromBody] Resena updatedResena)
+        public async Task<IActionResult> UpdateResena(int id, [FromBody] ResenaUpdateDTO updatedResena)
         {
 
             try
             {
-                var existingResena = await _resenaRepository.GetByIdAsync(id);
-                if (id <= 0) return BadRequest("El ID no es válido");
-                existingResena.Calificacion = updatedResena.Calificacion;
-                existingResena.Comentario = updatedResena.Comentario;
-                await _resenaRepository.UpdateAsync(existingResena);
+                await _resenaService.UpdateAsync(id, updatedResena);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -87,7 +83,7 @@ namespace ResenasAPI.Controllers
         {
             try
             {
-                await _resenaRepository.DeleteAsync(id);
+                await _resenaService.DeleteAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
