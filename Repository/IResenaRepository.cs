@@ -6,7 +6,7 @@ namespace CursosAPI.Repositories
     {
         Task<List<Resena>> GetAllAsync();
         Task<Resena?> GetByIdAsync(int id);
-        Task AddAsync(Resena resena);
+        Task AddAsync(ResenaCreateDTO resena);
         Task UpdateAsync(Resena resena);
         Task DeleteAsync(int id);
 

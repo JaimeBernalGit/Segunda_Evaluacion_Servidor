@@ -1,14 +1,18 @@
 namespace Models;
+
 public class Resena
 {
     public int Id { get; set; }
-    public Usuario Usuario { get; set; }
-    public Curso Curso { get; set; }
+
+    public Usuario? Usuario { get; set; } 
+    public Curso? Curso { get; set; }
+
     public int Calificacion { get; set; }
     public string Comentario { get; set; }
     public DateTime FechaPublicacion { get; set; }
 
-    public Resena(){}
+    public Resena() { }
+
 
     public Resena(Usuario usuario, Curso curso, int calificacion, string comentario, DateTime fechaPublicacion)
     {
@@ -18,4 +22,7 @@ public class Resena
         Comentario = comentario;
         FechaPublicacion = fechaPublicacion;
     }
+
+
+
 }
