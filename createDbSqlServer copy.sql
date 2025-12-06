@@ -14,7 +14,7 @@ CREATE TABLE Curso (
     curso_id INT IDENTITY(1,1) PRIMARY KEY,
     titulo NVARCHAR(150) NOT NULL,
     descripcion NVARCHAR(MAX), 
-    cateria NVARCHAR(50),
+    categoria NVARCHAR(50),
     nivel NVARCHAR(20),
     fecha_creacion DATETIME NOT NULL DEFAULT GETDATE(),
     precio DECIMAL(10, 2) NOT NULL DEFAULT 0.00 CHECK (precio >= 0)

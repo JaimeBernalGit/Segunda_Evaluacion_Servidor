@@ -8,7 +8,7 @@ VALUES
 
 
 
-INSERT INTO Curso (titulo, descripcion, cateria, nivel, precio)
+INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio)
 VALUES 
 ('Python para Principiantes', 'Domina los fundamentos de la programación con Python.', 'Programación', 'Básico', 15.50),
 ('Fotografía Profesional', 'Aprende iluminación y composición avanzada.', 'Arte', 'Avanzado', 45.00),

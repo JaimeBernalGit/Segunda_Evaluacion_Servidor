@@ -2,8 +2,8 @@ namespace Models;
 public class Inscripcion
 {
     public int Id { get; set; }
-    public Usuario Usuario { get; set; }
-    public Curso Curso { get; set; }
+    public Usuario? Usuario { get; set; }
+    public Curso? Curso { get; set; }
     public DateTime FechaInscripcion { get; set; }
     public int ProgresoPorcentaje { get; set; }
     public string Estado { get; set; }

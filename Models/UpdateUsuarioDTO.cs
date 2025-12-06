@@ -9,7 +9,7 @@ public class UpdateUsuarioDTO
 
     public UpdateUsuarioDTO() { }
 
-    public UpdateUsuarioDTO(string nombre, string nombre_Usuario, string password, string correo, strign estado)
+    public UpdateUsuarioDTO(string nombre, string nombre_Usuario, string password, string correo, string estado)
     {
         Nombre = nombre;
         Nombre_Usuario = nombre_Usuario;
