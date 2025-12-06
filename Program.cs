@@ -11,12 +11,14 @@ var connectionString = builder.Configuration.GetConnectionString("GestionCursosD
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 builder.Services.AddScoped<IResenaRepository, ResenaRepository>();
+builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
 
 //Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICursoService, CursoService>();
 builder.Services.AddScoped<IResenaService, ResenaService>();
+builder.Services.AddScoped<IPagoService, PagoService>();
 
 // Add services to the container.
 
