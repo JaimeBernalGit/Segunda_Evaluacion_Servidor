@@ -55,6 +55,83 @@ namespace CursosAPI.Services
 
         }
 
+
+        public async Task<List<Resena>> GetByUsuarioAndCursoAsync(int usuarioId, int cursoId)
+        {
+
+            var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
+            if (usuario == null)
+            {
+                throw new KeyNotFoundException($"El usuario con ID {usuarioId} no existe.");
+            }
+
+            var curso = await _cursoRepository.GetByIdAsync(cursoId);
+            if (curso == null)
+            {
+                throw new KeyNotFoundException($"El curso con ID {cursoId} no existe.");
+            }
+
+            var todasLasResenas = await _resenaRepository.GetAllAsync();
+            var resenasFiltradas = todasLasResenas
+                    .Where(r => r.Usuario.Id == usuarioId && r.Curso.Id == cursoId)
+                    .ToList();
+
+            if (resenasFiltradas.Count == 0)
+            {
+                throw new KeyNotFoundException($"No se encontraron reseñas del usuario {usuarioId} para el curso {cursoId}.");
+            }
+
+            return resenasFiltradas;
+
+        }
+
+        public async Task<List<Resena>> GetByUsuarioAsync(int usuarioId)
+        {
+
+            var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
+            if (usuario == null)
+            {
+                throw new KeyNotFoundException($"El usuario con ID {usuarioId} no existe.");
+            }
+
+            var todasLasResenas = await _resenaRepository.GetAllAsync();
+
+            var resenasUsuario = todasLasResenas
+                .Where(r => r.Usuario.Id == usuarioId) 
+                .ToList();
+
+            if (resenasUsuario.Count == 0)
+            {
+                throw new KeyNotFoundException($"El usuario {usuarioId} aún no ha escrito ninguna reseña.");
+            }
+
+            return resenasUsuario;
+        }
+
+        public async Task<List<Resena>> GetByCursoAsync(int cursoId)
+        {
+
+            var curso = await _cursoRepository.GetByIdAsync(cursoId);
+            if (curso == null)
+            {
+                throw new KeyNotFoundException($"El curso con ID {cursoId} no existe.");
+            }
+
+            var resenas = await _resenaRepository.GetAllAsync();
+
+            var resenasCurso = resenas
+                .Where(r => r.Curso.Id == cursoId) 
+                .ToList();
+
+            if (resenasCurso.Count == 0)
+            {
+                throw new KeyNotFoundException($"El curso {cursoId} no tiene reseñas todavía.");
+            }
+
+            return resenasCurso;
+        }
+
+
         public async Task AddAsync(ResenaCreateDTO resena)
         {
 

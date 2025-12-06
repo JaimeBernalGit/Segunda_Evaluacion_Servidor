@@ -12,7 +12,7 @@ namespace ResenasAPI.Controllers
     {
         private readonly IResenaService _resenaService;
 
-        public ResenaController(IResenaService resenaService )
+        public ResenaController(IResenaService resenaService)
         {
             _resenaService = resenaService;
         }
@@ -25,7 +25,7 @@ namespace ResenasAPI.Controllers
 
         {
 
-            var Resenas = await _resenaService.GetAllAsync(calificacion,fecha);
+            var Resenas = await _resenaService.GetAllAsync(calificacion, fecha);
             return Ok(Resenas);
 
         }
@@ -39,6 +39,48 @@ namespace ResenasAPI.Controllers
                 return Ok(Resena);
             }
 
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("usuario/{usuarioId}/curso/{cursoId}")]
+        public async Task<IActionResult> GetByUsuarioYCurso(int usuarioId, int cursoId)
+        {
+            try
+            {
+                var resenas = await _resenaService.GetByUsuarioAndCursoAsync(usuarioId, cursoId);
+                return Ok(resenas);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("usuario/{usuarioId}")]
+        public async Task<IActionResult> GetByUsuario(int usuarioId)
+        {
+            try
+            {
+                var resenas = await _resenaService.GetByUsuarioAsync(usuarioId);
+                return Ok(resenas);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("curso/{cursoId}")]
+        public async Task<IActionResult> GetByCurso(int cursoId)
+        {
+            try
+            {
+                var resenas = await _resenaService.GetByCursoAsync(cursoId);
+                return Ok(resenas);
+            }
             catch (KeyNotFoundException ex)
             {
                 return NotFound(ex.Message);
