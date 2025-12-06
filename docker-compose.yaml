@@ -6,7 +6,7 @@ services:
     image: blancaclaire/cursos-api:latest 
     container_name: cursos_api_container
     ports:
-      - "8302:80" 
+      - "8302:8080" 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__GestionCursosDB=Server=sqlserver;Database=GestionCursosDB;User Id=sa;Password=TuPasswordFuerte123!;TrustServerCertificate=True;
