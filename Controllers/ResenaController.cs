@@ -45,6 +45,7 @@ namespace ResenasAPI.Controllers
             }
         }
 
+        //Nos trae las reseñas de un usuario por curso
         [HttpGet("usuario/{usuarioId}/curso/{cursoId}")]
         public async Task<IActionResult> GetByUsuarioYCurso(int usuarioId, int cursoId)
         {
@@ -59,6 +60,7 @@ namespace ResenasAPI.Controllers
             }
         }
 
+        //Consulta las reseñas de un usuario
         [HttpGet("usuario/{usuarioId}")]
         public async Task<IActionResult> GetByUsuario(int usuarioId)
         {
@@ -73,6 +75,8 @@ namespace ResenasAPI.Controllers
             }
         }
 
+
+        //Consulta las reseñas por curso
         [HttpGet("curso/{cursoId}")]
         public async Task<IActionResult> GetByCurso(int cursoId)
         {

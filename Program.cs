@@ -18,6 +18,7 @@ builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICursoService, CursoService>();
 builder.Services.AddScoped<IResenaService, ResenaService>();
+builder.Services.AddScoped<IPagoService, PagoService>();
 
 // Add services to the container.
 
