@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  
+  api:
+    image: blancaclaire/cursos-api:latest 
+    container_name: cursos_api_container
+    ports:
+      - "8302:8080" 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__GestionCursosDB=Server=sqlserver;Database=GestionCursosDB;User Id=sa;Password=TuPasswordFuerte123!;TrustServerCertificate=True;
+    depends_on:
+      - sqlserver
+    networks:
+      - backend 
+    restart: unless-stopped
+
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver_practica
+    ports:
+      - "2038:1433" 
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=TuPasswordFuerte123!
+      - MSSQL_PID=Express
+    volumes:
+    # los datos de la base de datos se guardan en el volumen
+    # /var/opt/mssql es la carpeta interna del contenedor de Linux donde SQL Server guarda físicamente todos tus datos
+      - sqlserver_data:/var/opt/mssql 
+    networks:
+      - backend # La metemos en la misma red para que se vean
+    restart: unless-stopped
+
+# DEFINICIÓN DE REDES
+networks:
+  backend:
+    driver: bridge
+
+
+volumes:
+  sqlserver_data: 
