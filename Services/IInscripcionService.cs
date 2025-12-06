@@ -3,7 +3,7 @@ namespace CursosAPI.Services
 {
     public interface IInscripcionService
     {
-        Task<List<Inscripcion>> GetAllAsync();
+        Task<List<Inscripcion>> GetAllAsync(string? estado = null, int? progresoMinimo = null, DateTime? fechaDesde = null, DateTime? fechaHasta = null);
         Task<Inscripcion?> GetByIdAsync(int id);
         Task AddAsync(CreateInscripcionDTO inscripcion);
         Task UpdateAsync(UpdateInscripcionDTO inscripcion, int id);

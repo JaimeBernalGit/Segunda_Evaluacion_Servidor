@@ -12,9 +12,40 @@ namespace CursosAPI.Services
             
         }
 
-        public async Task<List<Inscripcion>> GetAllAsync()
+        public async Task<List<Inscripcion>> GetAllAsync(string? estado = null, int? progresoMinimo = null, DateTime? fechaDesde = null, DateTime? fechaHasta = null)
         {
-            return await _inscripcionRepository.GetAllAsync();
+            var inscripciones = await _inscripcionRepository.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                estado = estado.Trim();
+                inscripciones = inscripciones
+                    .Where(i => i.Estado.Equals(estado))
+                    .ToList();
+            }
+
+            if (progresoMinimo.HasValue)
+            {
+                inscripciones = inscripciones
+                    .Where(i => i.ProgresoPorcentaje >= progresoMinimo.Value)
+                    .ToList();
+            }
+
+            if (fechaDesde.HasValue)
+            {
+                inscripciones = inscripciones
+                    .Where(i => i.FechaInscripcion.Date >= fechaDesde.Value.Date)
+                    .ToList();
+            }
+
+            if (fechaHasta.HasValue)
+            {
+                inscripciones = inscripciones
+                    .Where(i => i.FechaInscripcion.Date <= fechaHasta.Value.Date)
+                    .ToList();
+            }
+
+            return inscripciones;
         }
 
         public async Task<Inscripcion?> GetByIdAsync(int id)

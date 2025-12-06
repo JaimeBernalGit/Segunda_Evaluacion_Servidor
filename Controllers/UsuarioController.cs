@@ -17,11 +17,17 @@ namespace CursosAPI.Controllers
         }
     
         [HttpGet]
-        public async Task<ActionResult<List<Usuario>>> GetUsuarios()
+        public async Task<ActionResult<List<Usuario>>> GetUsuarios(
+            [FromQuery] string? nombre,
+            [FromQuery] string? estado,
+            [FromQuery] DateTime? fechaRegistroDesde,
+            [FromQuery] DateTime? fechaRegistroHasta
+        )
         {
-            var usuarios = await _service.GetAllAsync();
+            var usuarios = await _service.GetAllAsync(nombre, estado, fechaRegistroDesde, fechaRegistroHasta);
             return Ok(usuarios);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {

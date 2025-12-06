@@ -12,9 +12,33 @@ namespace CursosAPI.Services
             
         }
 
-        public async Task<List<Leccion>> GetAllAsync()
+        public async Task<List<Leccion>> GetAllAsync(string? titulo = null, int? duracionMinima = null, int? duracionMaxima = null)
         {
-            return await _leccionRepository.GetAllAsync();
+            var lecciones = await _leccionRepository.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(titulo))
+            {
+                titulo = titulo.Trim();
+                lecciones = lecciones
+                    .Where(l => l.Titulo.Contains(titulo))
+                    .ToList();
+            }
+
+            if (duracionMinima.HasValue)
+            {
+                lecciones = lecciones
+                    .Where(l => l.DuracionMin >= duracionMinima.Value)
+                    .ToList();
+            }
+
+            if (duracionMaxima.HasValue)
+            {
+                lecciones = lecciones
+                    .Where(l => l.DuracionMin <= duracionMaxima.Value)
+                    .ToList();
+            }
+
+            return lecciones;
         }
 
         public async Task<Leccion?> GetByIdAsync(int id)

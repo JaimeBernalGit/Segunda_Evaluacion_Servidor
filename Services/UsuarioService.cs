@@ -12,9 +12,42 @@ namespace CursosAPI.Services
             
         }
 
-        public async Task<List<Usuario>> GetAllAsync()
+        public async Task<List<Usuario>> GetAllAsync(string? nombre = null, string? estado = null, DateTime? fechaRegistroDesde = null, DateTime? fechaRegistroHasta = null)
         {
-            return await _usuarioRepository.GetAllAsync();
+            var usuarios = await _usuarioRepository.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                nombre = nombre.Trim();
+                usuarios = usuarios
+                    .Where(u => u.Nombre.Contains(nombre) || 
+                                u.Nombre_Usuario.Contains(nombre))
+                    .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                estado = estado.Trim();
+                usuarios = usuarios
+                    .Where(u => u.Estado.Equals(estado))
+                    .ToList();
+            }
+
+            if (fechaRegistroDesde.HasValue)
+            {
+                usuarios = usuarios
+                    .Where(u => u.Fecha_Registro.Date >= fechaRegistroDesde.Value.Date)
+                    .ToList();
+            }
+
+            if (fechaRegistroHasta.HasValue)
+            {
+                usuarios = usuarios
+                    .Where(u => u.Fecha_Registro.Date <= fechaRegistroHasta.Value.Date)
+                    .ToList();
+            }
+            
+            return usuarios;
         }
 
         public async Task<Usuario?> GetByIdAsync(int id)

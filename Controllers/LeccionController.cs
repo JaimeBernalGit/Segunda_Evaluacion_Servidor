@@ -17,11 +17,16 @@ namespace CursosAPI.Controllers
         }
     
         [HttpGet]
-        public async Task<ActionResult<List<Leccion>>> GetLeccions()
+        public async Task<ActionResult<List<Leccion>>> GetLeccions(
+            [FromQuery] string? titulo,
+            [FromQuery] int? duracionMinima,
+            [FromQuery] int? duracionMaxima
+        )
         {
-            var leccions = await _service.GetAllAsync();
+            var leccions = await _service.GetAllAsync(titulo, duracionMinima, duracionMaxima);
             return Ok(leccions);
         }
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Leccion>> GetLeccion(int id)
         {
