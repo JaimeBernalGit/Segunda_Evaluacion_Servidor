@@ -47,7 +47,7 @@ CREATE TABLE Inscripcion (
 
 GO
 CREATE TABLE Resena (
-    reseña_id INT IDENTITY(1,1) PRIMARY KEY,
+    resena_id INT IDENTITY(1,1) PRIMARY KEY,
     usuario_id INT NOT NULL,
     curso_id INT NOT NULL,
     calificacion INT NOT NULL CHECK (calificacion >= 1 AND calificacion <= 5),
