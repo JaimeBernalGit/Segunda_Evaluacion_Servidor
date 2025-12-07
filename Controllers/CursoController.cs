@@ -10,10 +10,12 @@ namespace CursosAPI.Controllers
     public class CursoController : ControllerBase
     {
         private readonly ICursoService _cursoService;
+        private readonly IConfiguration _configuration;
 
-        public CursoController(ICursoService cursoRepository)
+        public CursoController(ICursoService cursoService, IConfiguration configuration)
         {
-            _cursoService = cursoRepository;
+            _cursoService = cursoService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -80,8 +82,14 @@ namespace CursosAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCurso(int id)
+        public async Task<IActionResult> DeleteCurso(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
         {
+            var adminApiKey = _configuration["AdminSettings:ApiKey"];
+
+            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
+            {
+                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
+            }
             try
             {
                 await _cursoService.DeleteAsync(id);

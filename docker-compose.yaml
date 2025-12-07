@@ -10,6 +10,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__GestionCursosDB=Server=sqlserver;Database=GestionCursosDB;User Id=sa;Password=TuPasswordFuerte123!;TrustServerCertificate=True;
+      - AdminSettings__ApiKey=SecretoSuperSeguro123!
     depends_on:
       - sqlserver
     networks:

@@ -3,19 +3,19 @@ using CursosAPI.Services;
 using Models;
 namespace CursosAPI.Controllers
 {
-   [Route("api/[controller]")]
-   [ApiController]
-   public class LeccionController : ControllerBase
-   {
-    private static List<Leccion> leccions = new List<Leccion>();
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LeccionController : ControllerBase
+    {
+        private readonly ILeccionService _service;
+        private readonly IConfiguration _configuration;
 
-    private readonly ILeccionService _service;
-
-    public LeccionController(ILeccionService service)
+        public LeccionController(ILeccionService service, IConfiguration configuration)
         {
             _service = service;
+            _configuration = configuration;
         }
-    
+
         [HttpGet]
         public async Task<ActionResult<List<Leccion>>> GetLeccions(
             [FromQuery] string? titulo,
@@ -42,8 +42,15 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Leccion>> CreateLeccion(CreateLeccionDTO leccion)
+        public async Task<ActionResult<Leccion>> CreateLeccion(CreateLeccionDTO leccion, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
         {
+            var adminApiKey = _configuration["AdminSettings:ApiKey"];
+
+            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
+            {
+                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
+            }
+
             try
             {
                 await _service.AddAsync(leccion);
@@ -56,9 +63,16 @@ namespace CursosAPI.Controllers
         }
 
 
-       [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLeccion(int id, UpdateLeccionDTO updatedLeccion)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateLeccion(int id, UpdateLeccionDTO updatedLeccion, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
         {
+            var adminApiKey = _configuration["AdminSettings:ApiKey"];
+
+            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
+            {
+                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
+            }
+
             var existingLeccion = await _service.GetByIdAsync(id);
             if (existingLeccion == null)
             {
@@ -84,20 +98,32 @@ namespace CursosAPI.Controllers
             }
 
         }
-  
-       [HttpDelete("{id}")]
-       public async Task<IActionResult> DeleteLeccion(int id)
-       {
-           try
-           {
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteLeccion(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        {
+            var adminApiKey = _configuration["AdminSettings:ApiKey"];
+
+            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
+            {
+                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
+            }
+            
+            var leccion = await _service.GetByIdAsync(id);
+            if (leccion == null)
+            {
+                return NotFound();
+            }
+            try
+            {
                await _service.DeleteAsync(id);
                return NoContent();
-           }
-           catch (KeyNotFoundException ex)
-           {
+            }
+            catch (KeyNotFoundException ex)
+            {
                return NotFound(ex.Message);
-           }
-       }
+            }
+        }
 
-   }
+    }
 }

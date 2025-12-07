@@ -11,10 +11,12 @@ namespace ResenasAPI.Controllers
     public class ResenaController : ControllerBase
     {
         private readonly IResenaService _resenaService;
+        private readonly IConfiguration _configuration;
 
-        public ResenaController(IResenaService resenaService)
+        public ResenaController(IResenaService resenaService, IConfiguration configuration)
         {
             _resenaService = resenaService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -109,6 +111,7 @@ namespace ResenasAPI.Controllers
         public async Task<IActionResult> UpdateResena(int id, [FromBody] ResenaUpdateDTO updatedResena)
         {
 
+
             try
             {
                 await _resenaService.UpdateAsync(id, updatedResena);
@@ -125,8 +128,14 @@ namespace ResenasAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteResena(int id)
+        public async Task<IActionResult> DeleteResena(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
         {
+            var adminApiKey = _configuration["AdminSettings:ApiKey"];
+            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
+            {
+                return Unauthorized("Acceso denegado: ApiKey inválida.");
+            }
+            
             try
             {
                 await _resenaService.DeleteAsync(id);

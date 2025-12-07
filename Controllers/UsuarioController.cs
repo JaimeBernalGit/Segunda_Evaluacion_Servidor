@@ -3,19 +3,21 @@ using CursosAPI.Services;
 using Models;
 namespace CursosAPI.Controllers
 {
-   [Route("api/[controller]")]
-   [ApiController]
-   public class UsuarioController : ControllerBase
-   {
-    private static List<Usuario> usuarios = new List<Usuario>();
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsuarioController : ControllerBase
+    {
 
-    private readonly IUsuarioService _service;
 
-    public UsuarioController(IUsuarioService service)
+        private readonly IUsuarioService _service;
+        private readonly IConfiguration _configuration;
+
+        public UsuarioController(IUsuarioService service, IConfiguration configuration)
         {
             _service = service;
+            _configuration = configuration;
         }
-    
+
         [HttpGet]
         public async Task<ActionResult<List<Usuario>>> GetUsuarios(
             [FromQuery] string? nombre,
@@ -57,9 +59,14 @@ namespace CursosAPI.Controllers
         }
 
 
-       [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUsuario(int id, UpdateUsuarioDTO updatedUsuario)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUsuario(int id, UpdateUsuarioDTO updatedUsuario, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
         {
+            var adminApiKey = _configuration["AdminSettings:ApiKey"];
+            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
+            {
+                return Unauthorized("Acceso denegado: ApiKey inválida.");
+            }
             var existingUsuario = await _service.GetByIdAsync(id);
             if (existingUsuario == null)
             {
@@ -86,20 +93,31 @@ namespace CursosAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-  
-       [HttpDelete("{id}")]
-       public async Task<IActionResult> DeleteUsuario(int id)
-       {
-           try
-           {
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        {
+
+            var adminApiKey = _configuration["AdminSettings:ApiKey"];
+            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
+            {
+                return Unauthorized("Acceso denegado: ApiKey inválida.");
+            }
+            var usuario = await _service.GetByIdAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            try
+            {
                await _service.DeleteAsync(id);
                return NoContent();
-           }
-           catch (KeyNotFoundException ex)
-           {
+            }
+            catch (KeyNotFoundException ex)
+            {
                return NotFound(ex.Message);
-           }
-       }
+            }
+        }
 
-   }
+    }
 }
