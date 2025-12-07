@@ -31,19 +31,29 @@ namespace CursosAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            var usuario = await _service.GetByIdAsync(id);
-            if (usuario == null)
+            try
             {
-                return NotFound();
+                var usuario = await _service.GetByIdAsync(id);
+                return Ok(usuario);
             }
-            return Ok(usuario);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<Usuario>> CreateUsuario(CreateUsuarioDTO usuario)
         {
-            await _service.AddAsync(usuario);
-            return Ok(usuario);
+            try
+            {
+                await _service.AddAsync(usuario);
+                return Ok("Usuario creado exitosamente");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -62,20 +72,33 @@ namespace CursosAPI.Controllers
             existingUsuarioDTO.Nombre = updatedUsuario.Nombre;
             existingUsuarioDTO.Password = updatedUsuario.Password;
 
-            await _service.UpdateAsync(existingUsuarioDTO, existingUsuario.Id);
-            return NoContent();
+            try
+            {
+                await _service.UpdateAsync(existingUsuarioDTO, existingUsuario.Id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
   
        [HttpDelete("{id}")]
        public async Task<IActionResult> DeleteUsuario(int id)
        {
-           var usuario = await _service.GetByIdAsync(id);
-           if (usuario == null)
+           try
            {
-               return NotFound();
+               await _service.DeleteAsync(id);
+               return NoContent();
            }
-           await _service.DeleteAsync(id);
-           return NoContent();
+           catch (KeyNotFoundException ex)
+           {
+               return NotFound(ex.Message);
+           }
        }
 
    }

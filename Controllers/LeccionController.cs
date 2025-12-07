@@ -30,19 +30,29 @@ namespace CursosAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Leccion>> GetLeccion(int id)
         {
-            var leccion = await _service.GetByIdAsync(id);
-            if (leccion == null)
+            try
             {
-                return NotFound();
+                var leccion = await _service.GetByIdAsync(id);
+                return Ok(leccion);
             }
-            return Ok(leccion);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<Leccion>> CreateLeccion(CreateLeccionDTO leccion)
         {
-            await _service.AddAsync(leccion);
-            return Ok(leccion);
+            try
+            {
+                await _service.AddAsync(leccion);
+                return Ok("Lección creada exitosamente");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -59,21 +69,34 @@ namespace CursosAPI.Controllers
             existingLeccionDTO.ContenidoUrl = updatedLeccion.ContenidoUrl;
             existingLeccionDTO.Descripción = updatedLeccion.Descripción;
             existingLeccionDTO.DuracionMin = updatedLeccion.DuracionMin;
+            try
+            {
+                await _service.UpdateAsync(existingLeccionDTO, existingLeccion.Id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            await _service.UpdateAsync(existingLeccionDTO, existingLeccion.Id);
-            return NoContent();
         }
   
        [HttpDelete("{id}")]
        public async Task<IActionResult> DeleteLeccion(int id)
        {
-           var leccion = await _service.GetByIdAsync(id);
-           if (leccion == null)
+           try
            {
-               return NotFound();
+               await _service.DeleteAsync(id);
+               return NoContent();
            }
-           await _service.DeleteAsync(id);
-           return NoContent();
+           catch (KeyNotFoundException ex)
+           {
+               return NotFound(ex.Message);
+           }
        }
 
    }

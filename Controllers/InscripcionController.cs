@@ -31,19 +31,29 @@ namespace CursosAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Inscripcion>> GetInscripcion(int id)
         {
-            var inscripcion = await _service.GetByIdAsync(id);
-            if (inscripcion == null)
+            try
             {
-                return NotFound();
+                var inscripcion = await _service.GetByIdAsync(id);
+                return Ok(inscripcion);
             }
-            return Ok(inscripcion);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<Inscripcion>> CreateInscripcion(CreateInscripcionDTO inscripcion)
         {
-            await _service.AddAsync(inscripcion);
-            return Ok();
+            try
+            {
+                await _service.AddAsync(inscripcion);
+                return Ok("Inscripción creada exitosamente");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 
@@ -59,20 +69,33 @@ namespace CursosAPI.Controllers
             existingInscripcionDTO.ProgresoPorcentaje = updatedInscripcion.ProgresoPorcentaje;
             existingInscripcionDTO.Estado = updatedInscripcion.Estado;
 
-            await _service.UpdateAsync(existingInscripcionDTO, existingInscripcion.Id);
-            return NoContent();
+            try
+            {
+                await _service.UpdateAsync(existingInscripcionDTO, existingInscripcion.Id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
   
        [HttpDelete("{id}")]
        public async Task<IActionResult> DeleteInscripcion(int id)
        {
-           var inscripcion = await _service.GetByIdAsync(id);
-           if (inscripcion == null)
+           try
            {
-               return NotFound();
+               await _service.DeleteAsync(id);
+               return NoContent();
            }
-           await _service.DeleteAsync(id);
-           return NoContent();
+           catch (KeyNotFoundException ex)
+           {
+               return NotFound(ex.Message);
+           }
        }
 
    }
