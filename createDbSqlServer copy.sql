@@ -7,7 +7,8 @@ CREATE TABLE Usuario (
     password NVARCHAR(255) NOT NULL,
     email NVARCHAR(100) NOT NULL UNIQUE,
     fecha_registro DATETIME NOT NULL DEFAULT GETDATE(), 
-    estado NVARCHAR(20) DEFAULT 'activo'
+    estado NVARCHAR(20) DEFAULT 'activo',
+    rol NVARCHAR(10) DEFAULT 'user'
 );
 
 CREATE TABLE Curso (

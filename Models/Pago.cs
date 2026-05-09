@@ -2,7 +2,7 @@ namespace Models;
 public class Pago{
 
     public int Id { get; set; }
-    public Usuario Usuario { get; set; }
+    public UserDtoOut Usuario { get; set; }
     public Curso Curso { get; set; }
     public double Cantidad { get; set; }
     public string Nombre_Titular{ get; set; }
@@ -11,7 +11,7 @@ public class Pago{
 
     public Pago(){}
 
-    public Pago(int id, Usuario usuario, Curso curso, double cantidad, string nombre_Titular, string numero_Titular, string cVV)
+    public Pago(int id, UserDtoOut usuario, Curso curso, double cantidad, string nombre_Titular, string numero_Titular, string cVV)
     {
         Id = id;
         Usuario = usuario;

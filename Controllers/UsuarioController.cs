@@ -19,7 +19,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Usuario>>> GetUsuarios(
+        public async Task<ActionResult<List<UserDtoOut>>> GetUsuarios(
             [FromQuery] string? nombre,
             [FromQuery] string? estado,
             [FromQuery] DateTime? fechaRegistroDesde,
@@ -31,7 +31,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUsuario(int id)
+        public async Task<ActionResult<UserDtoOut>> GetUsuario(int id)
         {
             try
             {

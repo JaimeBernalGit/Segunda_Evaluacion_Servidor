@@ -12,7 +12,7 @@ namespace CursosAPI.Services
             
         }
 
-        public async Task<List<Usuario>> GetAllAsync(string? nombre = null, string? estado = null, DateTime? fechaRegistroDesde = null, DateTime? fechaRegistroHasta = null)
+        public async Task<List<UserDtoOut>> GetAllAsync(string? nombre = null, string? estado = null, DateTime? fechaRegistroDesde = null, DateTime? fechaRegistroHasta = null)
         {
             var usuarios = await _usuarioRepository.GetAllAsync();
 
@@ -41,7 +41,7 @@ namespace CursosAPI.Services
             return usuarios;
         }
 
-        public async Task<Usuario?> GetByIdAsync(int id)
+        public async Task<UserDtoOut?> GetByIdAsync(int id)
         {
             var usuario = await _usuarioRepository.GetByIdAsync(id);
             if (usuario == null || usuario.Id < 0)

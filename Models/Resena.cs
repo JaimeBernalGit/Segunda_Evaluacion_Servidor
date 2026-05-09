@@ -4,7 +4,7 @@ public class Resena
 {
     public int Id { get; set; }
 
-    public Usuario? Usuario { get; set; } 
+    public UserDtoOut? Usuario { get; set; } 
     public Curso? Curso { get; set; }
 
     public int Calificacion { get; set; }
@@ -14,7 +14,7 @@ public class Resena
     public Resena() { }
 
 
-    public Resena(Usuario usuario, Curso curso, int calificacion, string comentario, DateTime fechaPublicacion)
+    public Resena(UserDtoOut usuario, Curso curso, int calificacion, string comentario, DateTime fechaPublicacion)
     {
         Usuario = usuario;
         Curso = curso;

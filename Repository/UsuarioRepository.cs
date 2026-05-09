@@ -12,30 +12,30 @@ namespace CursosAPI.Repositories
             _connectionString = configuration.GetConnectionString("GestionCursosDB") ?? "Not found";
         }
 
-        public async Task<List<Usuario>> GetAllAsync()
+        public async Task<List<UserDtoOut>> GetAllAsync()
         {
-          var usuarios = new List<Usuario>();
+          var usuarios = new List<UserDtoOut>();
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT usuario_id, nombre, nombre_usuario, password, email, fecha_registro, estado FROM Usuario";
+                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol FROM Usuario";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (await reader.ReadAsync())
                         {
-                            var usuario = new Usuario
+                            var usuario = new UserDtoOut
                             {
                                 Id = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Nombre_Usuario = reader.GetString(2),
-                                Password = reader.GetString(3),
-                                Correo = reader.GetString(4),
-                                Fecha_Registro = reader.GetDateTime(5),
-                                Estado = reader.GetString(6)
+                                Correo = reader.GetString(3),
+                                Fecha_Registro = reader.GetDateTime(4),
+                                Estado = reader.GetString(5),
+                                Rol = reader.GetString(6)
                             }; 
 
                             usuarios.Add(usuario);
@@ -46,15 +46,15 @@ namespace CursosAPI.Repositories
             return usuarios;
         }
 
-        public async Task<Usuario> GetByIdAsync(int id)
+        public async Task<UserDtoOut> GetByIdAsync(int id)
         {
-            Usuario usuario = null;
+            UserDtoOut usuario = null;
 
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT usuario_id, nombre, nombre_usuario, password, email, fecha_registro, estado FROM Usuario WHERE usuario_id = @usuario_id";
+                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol FROM Usuario WHERE usuario_id = @usuario_id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@usuario_id", id);
@@ -63,15 +63,15 @@ namespace CursosAPI.Repositories
                     {
                         if (await reader.ReadAsync())
                         {
-                            usuario = new Usuario
+                            usuario = new UserDtoOut
                             {
                                 Id = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Nombre_Usuario = reader.GetString(2),
-                                Password = reader.GetString(3),
-                                Correo = reader.GetString(4),
-                                Fecha_Registro = reader.GetDateTime(5),
-                                Estado = reader.GetString(6)
+                                Correo = reader.GetString(3),
+                                Fecha_Registro = reader.GetDateTime(4),
+                                Estado = reader.GetString(5),
+                                Rol = reader.GetString(6)
                             };
                         }
                     }
@@ -86,7 +86,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO Usuario (nombre, nombre_usuario, password, email, fecha_registro, estado) VALUES (@nombre, @nombre_usuario, @password, @email, @fecha_registro, @estado)";
+                string query = "INSERT INTO Usuario (nombre, nombre_usuario, password, email, fecha_registro, estado, rol) VALUES (@nombre, @nombre_usuario, @password, @email, @fecha_registro, @estado, @rol)";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nombre", usuario.Nombre);
@@ -95,6 +95,7 @@ namespace CursosAPI.Repositories
                     command.Parameters.AddWithValue("@email", usuario.Correo);
                     command.Parameters.AddWithValue("@fecha_registro", DateTime.Now);
                     command.Parameters.AddWithValue("@estado", "Inactivo");
+                    command.Parameters.AddWithValue("@rol", usuario.Rol);
 
                     await command.ExecuteNonQueryAsync();
                 }

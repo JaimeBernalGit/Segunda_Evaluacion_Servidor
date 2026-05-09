@@ -1,10 +1,10 @@
 USE GestionCursosDB;
 
-INSERT INTO Usuario (nombre, nombre_usuario, password, email, estado)
+INSERT INTO Usuario (nombre, nombre_usuario, password, email, estado, rol)
 VALUES 
-('Ana García', 'ana_g', 'pass1234', 'ana@email.com', 'activo'),
-('Pedro Martínez', 'pedro_dev', 'claveSegura', 'pedro@email.com', 'activo'),
-('Lucía Fernández', 'lucia_art', 'arte2024', 'lucia@email.com', 'suspendido');
+('Ana García', 'ana_g', 'pass1234', 'ana@email.com', 'activo', 'admin'),
+('Pedro Martínez', 'pedro_dev', 'claveSegura', 'pedro@email.com', 'activo', 'user'),
+('Lucía Fernández', 'lucia_art', 'arte2024', 'lucia@email.com', 'suspendido', 'user');
 
 
 
