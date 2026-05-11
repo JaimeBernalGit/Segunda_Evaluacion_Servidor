@@ -31,7 +31,6 @@ builder.Services.AddScoped<IInscripcionRepository, InscripcionRepository>();
 builder.Services.AddScoped<ILeccionRepository, LeccionRepository>();
 builder.Services.AddScoped<IPagoRepository, PagoRepository>();
 
-
 //Services
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICursoService, CursoService>();
@@ -39,6 +38,7 @@ builder.Services.AddScoped<IResenaService, ResenaService>();
 builder.Services.AddScoped<IInscripcionService, InscripcionService>();
 builder.Services.AddScoped<ILeccionService, LeccionService>();
 builder.Services.AddScoped<IPagoService, PagoService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Add services to the container.
 
