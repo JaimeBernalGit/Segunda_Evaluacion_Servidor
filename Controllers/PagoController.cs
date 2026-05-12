@@ -10,10 +10,12 @@ namespace CursosAPI.Controllers
     {
 
         private readonly IPagoService _pagoService;
+        private readonly IAuthService _authservice;
 
-        public PagoController(IPagoService pagoService)
+        public PagoController(IPagoService pagoService, IAuthService authService)
         {
             _pagoService = pagoService;
+            _authservice = authService;
         }
 
         [HttpGet]

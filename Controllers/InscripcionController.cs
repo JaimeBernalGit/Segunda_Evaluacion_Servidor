@@ -10,10 +10,12 @@ namespace CursosAPI.Controllers
     private static List<Inscripcion> inscripciones = new List<Inscripcion>();
 
     private readonly IInscripcionService _service;
+    private readonly IAuthService _authservice;
 
-    public InscripcionController(IInscripcionService service)
+    public InscripcionController(IInscripcionService service, IAuthService authService)
         {
             _service = service;
+            _authservice = authService;
         }
     
         [HttpGet]

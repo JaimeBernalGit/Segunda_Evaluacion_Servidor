@@ -12,11 +12,13 @@ namespace ResenasAPI.Controllers
     {
         private readonly IResenaService _resenaService;
         private readonly IConfiguration _configuration;
+        private readonly IAuthService _authservice;
 
-        public ResenaController(IResenaService resenaService, IConfiguration configuration)
+        public ResenaController(IResenaService resenaService, IConfiguration configuration, IAuthService authService)
         {
             _resenaService = resenaService;
             _configuration = configuration;
+            _authservice = authService;
         }
 
         [HttpGet]

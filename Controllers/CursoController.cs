@@ -11,11 +11,13 @@ namespace CursosAPI.Controllers
     {
         private readonly ICursoService _cursoService;
         private readonly IConfiguration _configuration;
+        private readonly IAuthService _authservice;
 
-        public CursoController(ICursoService cursoService, IConfiguration configuration)
+        public CursoController(ICursoService cursoService, IConfiguration configuration, IAuthService authService)
         {
             _cursoService = cursoService;
             _configuration = configuration;
+            _authservice = authService;
         }
 
         [HttpGet]

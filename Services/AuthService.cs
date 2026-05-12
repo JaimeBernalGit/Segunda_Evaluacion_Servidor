@@ -57,7 +57,7 @@ namespace CursosAPI.Services
         } 
         public bool HasAccessToResource(int requestedUserID, ClaimsPrincipal user) 
         {
-            /*var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             if (userIdClaim is null || !int.TryParse(userIdClaim.Value, out int userId)) 
             { 
                 return false; 
@@ -65,12 +65,11 @@ namespace CursosAPI.Services
             var isOwnResource = userId == requestedUserID;
 
             var roleClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-            if (roleClaim != null) return false;
+            if (roleClaim == null) return false;
             var isAdmin = roleClaim!.Value == Roles.Admin;
             
             var hasAccess = isOwnResource || isAdmin;
-            return hasAccess;*/
-            return true;
+            return hasAccess;
         }
      
 

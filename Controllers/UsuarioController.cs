@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CursosAPI.Services;
 using Models;
+using Microsoft.AspNetCore.Authorization;
 namespace CursosAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -11,11 +12,13 @@ namespace CursosAPI.Controllers
 
         private readonly IUsuarioService _service;
         private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
 
-        public UsuarioController(IUsuarioService service, IConfiguration configuration)
+        public UsuarioController(IUsuarioService service, IConfiguration configuration, IAuthService authService)
         {
             _service = service;
             _configuration = configuration;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -31,8 +34,11 @@ namespace CursosAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<UserDtoOut>> GetUsuario(int id)
         {
+            if (!_authService.HasAccessToResource(id, User))
+                return Forbid();
             try
             {
                 var usuario = await _service.GetByIdAsync(id);
