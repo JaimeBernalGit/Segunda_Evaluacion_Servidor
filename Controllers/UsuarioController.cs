@@ -22,6 +22,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<List<UserDtoOut>>> GetUsuarios(
             [FromQuery] string? nombre,
             [FromQuery] string? estado,
@@ -51,6 +52,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<Usuario>> CreateUsuario(CreateUsuarioDTO usuario)
         {
             try
@@ -66,13 +68,12 @@ namespace CursosAPI.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUsuario(int id, UpdateUsuarioDTO updatedUsuario, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        [Authorize]
+        public async Task<IActionResult> UpdateUsuario(int id, UpdateUsuarioDTO updatedUsuario)
         {
-            var adminApiKey = _configuration["AdminSettings:ApiKey"];
-            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
-            {
-                return Unauthorized("Acceso denegado: ApiKey inválida.");
-            }
+            if (!_authService.HasAccessToResource(id, User))
+                return Forbid();
+            
             var existingUsuario = await _service.GetByIdAsync(id);
             if (existingUsuario == null)
             {
@@ -101,14 +102,11 @@ namespace CursosAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DeleteUsuario(int id)
         {
 
-            var adminApiKey = _configuration["AdminSettings:ApiKey"];
-            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
-            {
-                return Unauthorized("Acceso denegado: ApiKey inválida.");
-            }
+           
             var usuario = await _service.GetByIdAsync(id);
             if (usuario == null)
             {

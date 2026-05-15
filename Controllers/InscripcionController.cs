@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CursosAPI.Services;
 using Models;
+using Microsoft.AspNetCore.Authorization;
 namespace CursosAPI.Controllers
 {
    [Route("api/[controller]")]
@@ -10,15 +11,16 @@ namespace CursosAPI.Controllers
     private static List<Inscripcion> inscripciones = new List<Inscripcion>();
 
     private readonly IInscripcionService _service;
-    private readonly IAuthService _authservice;
+    private readonly IAuthService _authService;
 
     public InscripcionController(IInscripcionService service, IAuthService authService)
         {
             _service = service;
-            _authservice = authService;
+            _authService = authService;
         }
     
         [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<List<Inscripcion>>> GetInscripciones(
             [FromQuery] string? estado,
             [FromQuery] int? progresoMinimo,
@@ -31,6 +33,7 @@ namespace CursosAPI.Controllers
         }
         
         [HttpGet("{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<Inscripcion>> GetInscripcion(int id)
         {
             try
@@ -43,8 +46,25 @@ namespace CursosAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
+        [HttpGet("usuario/{usuarioId}")]
+        [Authorize]
+        public async Task<IActionResult> GetByUsuario(int usuarioId)
+        {
+            if (!_authService.HasAccessToResource(usuarioId, User))
+                return Forbid();
+            try
+            {
+                var resenas = await _service.GetByUsuarioAsync(usuarioId);
+                return Ok(resenas);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<Inscripcion>> CreateInscripcion(CreateInscripcionDTO inscripcion)
         {
             try
@@ -60,6 +80,7 @@ namespace CursosAPI.Controllers
 
 
        [HttpPut("{id}")]
+       [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateInscripcion(int id, UpdateInscripcionDTO updatedInscripcion)
         {
             var existingInscripcion = await _service.GetByIdAsync(id);
@@ -87,6 +108,7 @@ namespace CursosAPI.Controllers
         }
   
        [HttpDelete("{id}")]
+       [Authorize(Roles = Roles.Admin)]
        public async Task<IActionResult> DeleteInscripcion(int id)
        {
            try

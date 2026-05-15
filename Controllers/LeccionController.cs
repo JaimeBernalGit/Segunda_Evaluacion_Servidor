@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CursosAPI.Services;
 using Models;
+using Microsoft.AspNetCore.Authorization;
 namespace CursosAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -9,16 +10,17 @@ namespace CursosAPI.Controllers
     {
         private readonly ILeccionService _service;
         private readonly IConfiguration _configuration;
-        private readonly IAuthService _authservice;
+        private readonly IAuthService _authService;
 
         public LeccionController(ILeccionService service, IConfiguration configuration, IAuthService authService)
         {
             _service = service;
             _configuration = configuration;
-            _authservice = authService;
+            _authService = authService;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<Leccion>>> GetLeccions(
             [FromQuery] string? titulo,
             [FromQuery] int? duracionMinima,
@@ -30,6 +32,7 @@ namespace CursosAPI.Controllers
         }
         
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Leccion>> GetLeccion(int id)
         {
             try
@@ -44,14 +47,9 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Leccion>> CreateLeccion(CreateLeccionDTO leccion, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<ActionResult<Leccion>> CreateLeccion(CreateLeccionDTO leccion)
         {
-            var adminApiKey = _configuration["AdminSettings:ApiKey"];
-
-            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
-            {
-                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
-            }
 
             try
             {
@@ -66,14 +64,10 @@ namespace CursosAPI.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLeccion(int id, UpdateLeccionDTO updatedLeccion, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> UpdateLeccion(int id, UpdateLeccionDTO updatedLeccion)
         {
-            var adminApiKey = _configuration["AdminSettings:ApiKey"];
-
-            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
-            {
-                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
-            }
+           
 
             var existingLeccion = await _service.GetByIdAsync(id);
             if (existingLeccion == null)
@@ -102,14 +96,10 @@ namespace CursosAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLeccion(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DeleteLeccion(int id)
         {
-            var adminApiKey = _configuration["AdminSettings:ApiKey"];
-
-            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
-            {
-                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
-            }
+            
             
             var leccion = await _service.GetByIdAsync(id);
             if (leccion == null)

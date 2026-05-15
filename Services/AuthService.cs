@@ -71,6 +71,18 @@ namespace CursosAPI.Services
             var hasAccess = isOwnResource || isAdmin;
             return hasAccess;
         }
+         public bool HasAccessToOwnResource(int requestedUserID, ClaimsPrincipal user) 
+        {
+            var userIdClaim = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            if (userIdClaim is null || !int.TryParse(userIdClaim.Value, out int userId)) 
+            { 
+                return false; 
+            }
+            var isOwnResource = userId == requestedUserID;
+      
+            var hasAccess = isOwnResource;
+            return hasAccess;
+        }
      
 
     }

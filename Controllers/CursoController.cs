@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CursosAPI.Services;
 using Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace CursosAPI.Controllers
@@ -11,13 +12,13 @@ namespace CursosAPI.Controllers
     {
         private readonly ICursoService _cursoService;
         private readonly IConfiguration _configuration;
-        private readonly IAuthService _authservice;
+        private readonly IAuthService _authService;
 
         public CursoController(ICursoService cursoService, IConfiguration configuration, IAuthService authService)
         {
             _cursoService = cursoService;
             _configuration = configuration;
-            _authservice = authService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -49,6 +50,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<Curso>> CreateCurso([FromBody] CursoCreateDTO Curso)
         {
             try
@@ -63,6 +65,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateCurso(int id, [FromBody] CursoUpdateDTO updatedCurso)
         {
 
@@ -84,14 +87,10 @@ namespace CursosAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCurso(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DeleteCurso(int id)
         {
-            var adminApiKey = _configuration["AdminSettings:ApiKey"];
-
-            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
-            {
-                return Unauthorized("Acceso denegado: ApiKey inválida o faltante.");
-            }
+            
             try
             {
                 await _cursoService.DeleteAsync(id);

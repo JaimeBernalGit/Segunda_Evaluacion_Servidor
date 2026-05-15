@@ -9,6 +9,7 @@ namespace CursosAPI.Services
         public Task<string> Register(RegisterDTO registerDTO);
         public string GenerateToken(UserDtoOut userDtoOut);
         public bool HasAccessToResource(int requestedUserID, ClaimsPrincipal user);
+        public bool HasAccessToOwnResource(int requestedUserID, ClaimsPrincipal user);
 
     }
 }

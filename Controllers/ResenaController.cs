@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CursosAPI.Services;
 using Models;
 using CursosAPI.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace ResenasAPI.Controllers
@@ -12,13 +13,13 @@ namespace ResenasAPI.Controllers
     {
         private readonly IResenaService _resenaService;
         private readonly IConfiguration _configuration;
-        private readonly IAuthService _authservice;
+        private readonly IAuthService _authService;
 
         public ResenaController(IResenaService resenaService, IConfiguration configuration, IAuthService authService)
         {
             _resenaService = resenaService;
             _configuration = configuration;
-            _authservice = authService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -35,6 +36,7 @@ namespace ResenasAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<Resena>> GetResenaById(int id)
         {
             try
@@ -96,6 +98,7 @@ namespace ResenasAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Resena>> CreateResena([FromBody] ResenaCreateDTO Resena)
         {
             try
@@ -110,9 +113,11 @@ namespace ResenasAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateResena(int id, [FromBody] ResenaUpdateDTO updatedResena)
         {
-
+            if (!_authService.HasAccessToOwnResource(id, User))
+                return Forbid();
 
             try
             {
@@ -130,13 +135,9 @@ namespace ResenasAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteResena(int id, [FromHeader(Name = "X-Admin-Key")] string? apiKey)
+        [Authorize(Roles = Roles.Admin)]
+        public async Task<IActionResult> DeleteResena(int id)
         {
-            var adminApiKey = _configuration["AdminSettings:ApiKey"];
-            if (string.IsNullOrEmpty(apiKey) || apiKey != adminApiKey)
-            {
-                return Unauthorized("Acceso denegado: ApiKey inválida.");
-            }
             
             try
             {

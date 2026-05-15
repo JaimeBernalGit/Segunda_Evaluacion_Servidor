@@ -5,11 +5,12 @@ namespace CursosAPI.Services
     public class InscripcionService : IInscripcionService
     {
         private readonly IInscripcionRepository _inscripcionRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public InscripcionService(IInscripcionRepository inscripcionRepository)
+        public InscripcionService(IInscripcionRepository inscripcionRepository, IUsuarioRepository usuarioRepository)
         {
             _inscripcionRepository = inscripcionRepository;
-            
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<List<Inscripcion>> GetAllAsync(string? estado = null, int? progresoMinimo = null, DateTime? fechaDesde = null, DateTime? fechaHasta = null)
@@ -48,6 +49,28 @@ namespace CursosAPI.Services
                 throw new KeyNotFoundException("El ID debe ser mayor que cero o no existe.");
             }
             return inscripcion;
+        }
+        public async Task<List<Inscripcion>> GetByUsuarioAsync(int usuarioId)
+        {
+
+            var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
+            if (usuario == null)
+            {
+                throw new KeyNotFoundException($"El usuario con ID {usuarioId} no existe.");
+            }
+
+            var Pagos = await _inscripcionRepository.GetAllAsync();
+
+            var PagosUsuario = Pagos
+                .Where(r => r.Usuario.Id == usuarioId)
+                .ToList();
+
+            if (PagosUsuario.Count == 0)
+            {
+                throw new KeyNotFoundException($"El usuario {usuarioId} aún no se ha inscrito a ningún curso.");
+            }
+
+            return PagosUsuario;
         }
 
         public async Task AddAsync(CreateInscripcionDTO inscripcion)
