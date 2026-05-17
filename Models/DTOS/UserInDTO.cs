@@ -1,21 +1,21 @@
-public class CreateUsuarioDTO
+public class UserInDto
 {
     public string Nombre { get; set; }
     public string Nombre_Usuario { get; set; }
     public string Password { get; set; }
     public string Correo { get; set; }
     public string Rol { get; set; }
-    public IFormFile FotoPerfil { get; set; }
+    public string FotoPerfilUrl { get; set; }
 
-    public CreateUsuarioDTO() { }
+    public UserInDto() { }
 
-    public CreateUsuarioDTO(string nombre, string nombre_Usuario, string password, string correo, string rol, IFormFile fotoPerfil)
+    public UserInDto(string nombre, string nombre_Usuario, string password, string correo, string rol, string fotoPerfilUrl)
     {
         Nombre = nombre;
         Nombre_Usuario = nombre_Usuario;
         Password = password;
         Correo = correo;
         Rol = rol;
-        FotoPerfil = fotoPerfil;
+        FotoPerfilUrl = fotoPerfilUrl;
     }
 }

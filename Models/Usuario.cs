@@ -9,10 +9,11 @@ public class Usuario
     public DateTime Fecha_Registro { get; set; }
     public string Estado { get; set; }
     public string Rol { get; set; }
+    public string FotoPerfilUrl { get; set; }
 
     public Usuario() { }
 
-    public Usuario(string nombre, string nombre_Usuario, string password, string correo,  DateTime fecha_Registro, string estado, string rol)
+    public Usuario(string nombre, string nombre_Usuario, string password, string correo,  DateTime fecha_Registro, string estado, string rol, string fotoPerfilUrl)
     {
         Nombre = nombre;
         Nombre_Usuario = nombre_Usuario;
@@ -21,6 +22,7 @@ public class Usuario
         Fecha_Registro = fecha_Registro;
         Estado = estado;
         Rol = rol;
+        FotoPerfilUrl = fotoPerfilUrl;
     }
 
 }

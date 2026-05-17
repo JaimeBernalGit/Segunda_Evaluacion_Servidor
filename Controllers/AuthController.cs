@@ -39,7 +39,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<string>> Register(RegisterDTO registerDTO)
+        public async Task<ActionResult<string>> Register([FromForm] RegisterDTO registerDTO)
         {
             try
             {

@@ -7,12 +7,12 @@ public class Curso
     public string Categoria { get; set; }
     public string Nivel { get; set; }
     public DateTime Fecha_Creacion { get; set; }
-
     public double Precio { get; set; }
+    public string DocUrl { get; set; }
 
     public Curso() { }
 
-    public Curso(string titulo, string descripcion, string categoria, string nivel, DateTime fecha_Creacion, double precio)
+    public Curso(string titulo, string descripcion, string categoria, string nivel, DateTime fecha_Creacion, double precio, string docUrl)
     {
         Titulo = titulo;
         Descripcion = descripcion;
@@ -20,6 +20,7 @@ public class Curso
         Nivel = nivel;
         Fecha_Creacion = fecha_Creacion;
         Precio = precio;
+        DocUrl = docUrl;
     }
 
     

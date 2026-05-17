@@ -20,7 +20,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol FROM Usuario";
+                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol, fotoPerfilUrl FROM Usuario";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -35,7 +35,8 @@ namespace CursosAPI.Repositories
                                 Correo = reader.GetString(3),
                                 Fecha_Registro = reader.GetDateTime(4),
                                 Estado = reader.GetString(5),
-                                Rol = reader.GetString(6)
+                                Rol = reader.GetString(6),
+                                FotoPerfilUrl = reader.GetString(7)
                             }; 
 
                             usuarios.Add(usuario);
@@ -54,7 +55,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol FROM Usuario WHERE usuario_id = @usuario_id";
+                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol, fotoPerfilUrl FROM Usuario WHERE usuario_id = @usuario_id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@usuario_id", id);
@@ -71,7 +72,8 @@ namespace CursosAPI.Repositories
                                 Correo = reader.GetString(3),
                                 Fecha_Registro = reader.GetDateTime(4),
                                 Estado = reader.GetString(5),
-                                Rol = reader.GetString(6)
+                                Rol = reader.GetString(6),
+                                FotoPerfilUrl = reader.GetString(7)
                             };
                         }
                     }
@@ -80,13 +82,13 @@ namespace CursosAPI.Repositories
             return usuario;
         }
 
-        public async Task AddAsync(CreateUsuarioDTO usuario)
+        public async Task AddAsync(UserInDto usuario)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO Usuario (nombre, nombre_usuario, password, email, fecha_registro, estado, rol) VALUES (@nombre, @nombre_usuario, @password, @email, @fecha_registro, @estado, @rol)";
+                string query = "INSERT INTO Usuario (nombre, nombre_usuario, password, email, fecha_registro, estado, rol, fotoPerfilUrl) VALUES (@nombre, @nombre_usuario, @password, @email, @fecha_registro, @estado, @rol, @fotoPerfilUrl)";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nombre", usuario.Nombre);
@@ -102,13 +104,13 @@ namespace CursosAPI.Repositories
             }
         }
 
-        public async Task UpdateAsync(UpdateUsuarioDTO usuario, int id)
+        public async Task UpdateAsync(UpdateUsuarioInDTO usuario, int id)
         {
              using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE Usuario SET nombre = @nombre, nombre_usuario = @nombre_usuario, password = @password, email = @email, estado = @estado WHERE usuario_id = @usuario_id";
+                string query = "UPDATE Usuario SET nombre = @nombre, nombre_usuario = @nombre_usuario, password = @password, email = @email, estado = @estado, fotoPerfilUrl = @fotoPerfilUrl WHERE usuario_id = @usuario_id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nombre", usuario.Nombre);
@@ -117,6 +119,7 @@ namespace CursosAPI.Repositories
                     command.Parameters.AddWithValue("@email", usuario.Correo);
                     command.Parameters.AddWithValue("@estado", usuario.Estado);
                     command.Parameters.AddWithValue("@usuario_id", id);
+                    command.Parameters.AddWithValue("@fotoPerfilUrl", usuario.FotoPerfilUrl);
                     
                     await command.ExecuteNonQueryAsync();
                 }
@@ -147,7 +150,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol FROM Usuario WHERE nombre_usuario = @nombre_usuario AND password = @password";
+                string query = "SELECT usuario_id, nombre, nombre_usuario, email, fecha_registro, estado, rol, fotoPerfilUrl FROM Usuario WHERE nombre_usuario = @nombre_usuario AND password = @password";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@nombre_usuario", loginDTO.Nombre_Usuario);
@@ -165,7 +168,8 @@ namespace CursosAPI.Repositories
                                 Correo = reader.GetString(3),
                                 Fecha_Registro = reader.GetDateTime(4),
                                 Estado = reader.GetString(5),
-                                Rol = reader.GetString(6)
+                                Rol = reader.GetString(6),
+                                FotoPerfilUrl = reader.GetString(7)
                             };
                         }
                     }
@@ -174,22 +178,23 @@ namespace CursosAPI.Repositories
             return usuario;
         }
 
-        public async Task<UserDtoOut> AddUserFromCredentials(RegisterDTO registerDTO) {
+        public async Task<UserDtoOut> AddUserFromCredentials(UserInDto userInDto) {
             UserDtoOut usuario = null;
             using (var connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO Usuario (nombre, nombre_usuario, password, email, fecha_registro, estado, rol) OUTPUT INSERTED.usuario_id, INSERTED.nombre, INSERTED.nombre_usuario, INSERTED.email, INSERTED.fecha_registro, INSERTED.estado, INSERTED.rol VALUES (@nombre, @nombre_usuario, @password, @email, @fecha_registro, @estado, @rol)";
+                string query = "INSERT INTO Usuario (nombre, nombre_usuario, password, email, fecha_registro, estado, rol, fotoPerfilUrl) OUTPUT INSERTED.usuario_id, INSERTED.nombre, INSERTED.nombre_usuario, INSERTED.email, INSERTED.fecha_registro, INSERTED.estado, INSERTED.rol, INSERTED.fotoPerfilUrl VALUES (@nombre, @nombre_usuario, @password, @email, @fecha_registro, @estado, @rol, @fotoPerfilUrl)";
                 using (var command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@nombre", registerDTO.Nombre);
-                    command.Parameters.AddWithValue("@nombre_usuario", registerDTO.Nombre_Usuario);
-                    command.Parameters.AddWithValue("@password", registerDTO.Password);
-                    command.Parameters.AddWithValue("@email", registerDTO.Correo);
+                    command.Parameters.AddWithValue("@nombre", userInDto.Nombre);
+                    command.Parameters.AddWithValue("@nombre_usuario", userInDto.Nombre_Usuario);
+                    command.Parameters.AddWithValue("@password", userInDto.Password);
+                    command.Parameters.AddWithValue("@email", userInDto.Correo);
                     command.Parameters.AddWithValue("@fecha_registro", DateTime.Now);
                     command.Parameters.AddWithValue("@estado", "Inactivo");
                     command.Parameters.AddWithValue("@rol", Roles.User);
+                    command.Parameters.AddWithValue("@fotoPerfilUrl", userInDto.FotoPerfilUrl);
 
                     using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -203,7 +208,8 @@ namespace CursosAPI.Repositories
                                     Correo = reader.GetString(3),
                                     Fecha_Registro = reader.GetDateTime(4),
                                     Estado = reader.GetString(5),
-                                    Rol = reader.GetString(6)
+                                    Rol = reader.GetString(6),
+                                    FotoPerfilUrl = reader.GetString(7)
                                 };
                             }
                         }

@@ -9,9 +9,10 @@ public class UserDtoOut
     public DateTime Fecha_Registro { get; set; }
     public string Estado { get; set; }
     public string Rol { get; set; }
+    public string FotoPerfilUrl { get; set; }
 
     public UserDtoOut(){}
-    public UserDtoOut(int id, string nombre, string nombre_Usuario, string correo, DateTime fecha_Registro, string estado, string rol)
+    public UserDtoOut(int id, string nombre, string nombre_Usuario, string correo, DateTime fecha_Registro, string estado, string rol, string fotoPerfilUrl)
     {
         Id = id;
         Nombre = nombre;
@@ -20,6 +21,7 @@ public class UserDtoOut
         Fecha_Registro = fecha_Registro;
         Estado = estado;
         Rol = rol;
+        FotoPerfilUrl = fotoPerfilUrl;
     }
 }
 

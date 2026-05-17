@@ -8,11 +8,12 @@ namespace CursosAPI.Services
     {
 
         private readonly ICursoRepository _cursoRepository;
+        private readonly IUploadDocService _uploadDocService;
 
-
-        public CursoService(ICursoRepository cursoRepository)
+        public CursoService(ICursoRepository cursoRepository, IUploadDocService uploadDocService)
         {
             _cursoRepository = cursoRepository;
+            _uploadDocService = uploadDocService;
         }
 
         public async Task<List<Curso>> GetAllAsync(string? titulo = null, string? categoria = null)
@@ -67,6 +68,8 @@ namespace CursosAPI.Services
                 throw new InvalidOperationException($"El curso '{curso.Titulo}' no puede tener un precio menor o igual a 0");
             }
 
+            var docUrl = await _uploadDocService.UploadPDFAsync(curso.Doc);
+
             //Se crea un nuevo objeto curso que contenga todo lo que necesita base de datos
             var cursoNuevo = new Curso
             {
@@ -75,7 +78,8 @@ namespace CursosAPI.Services
                 Categoria = curso.Categoria,
                 Nivel = curso.Nivel,
                 Precio = curso.Precio,
-                Fecha_Creacion = DateTime.Now
+                Fecha_Creacion = DateTime.Now,
+                DocUrl = docUrl
             };
 
             await _cursoRepository.AddAsync(cursoNuevo);
@@ -103,6 +107,7 @@ namespace CursosAPI.Services
                         throw new InvalidOperationException($"El curso '{curso.Titulo}' ya existe en el catálogo.");
                     }
                 }
+                var docUrl = await _uploadDocService.UploadPDFAsync(curso.Doc);
 
                 var cursoExistente = await GetByIdAsync(id);
 
@@ -111,6 +116,7 @@ namespace CursosAPI.Services
                 cursoExistente.Categoria = curso.Categoria;
                 cursoExistente.Nivel = curso.Nivel;
                 cursoExistente.Precio = curso.Precio;
+                cursoExistente.DocUrl = docUrl;
 
                 await _cursoRepository.UpdateAsync(cursoExistente);
             }

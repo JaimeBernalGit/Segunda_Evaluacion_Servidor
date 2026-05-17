@@ -53,7 +53,7 @@ namespace CursosAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<ActionResult<Usuario>> CreateUsuario(CreateUsuarioDTO usuario)
+        public async Task<ActionResult<Usuario>> CreateUsuario([FromForm] CreateUsuarioDTO usuario)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace CursosAPI.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateUsuario(int id, UpdateUsuarioDTO updatedUsuario)
+        public async Task<IActionResult> UpdateUsuario(int id,[FromForm] UpdateUsuarioDTO updatedUsuario)
         {
             if (!_authService.HasAccessToResource(id, User))
                 return Forbid();

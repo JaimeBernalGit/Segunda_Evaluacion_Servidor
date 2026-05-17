@@ -1,5 +1,6 @@
 using CursosAPI.Repositories;
 using CursosAPI.Services;
+using CursosAPI.Configurations;
 using Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,11 @@ using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings")
+);
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
@@ -39,6 +45,7 @@ builder.Services.AddScoped<IInscripcionService, InscripcionService>();
 builder.Services.AddScoped<ILeccionService, LeccionService>();
 builder.Services.AddScoped<IPagoService, PagoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUploadDocService, CloudinaryUploadDocService>();
 
 // Add services to the container.
 

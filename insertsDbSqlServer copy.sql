@@ -1,18 +1,18 @@
 USE GestionCursosDB;
 
-INSERT INTO Usuario (nombre, nombre_usuario, password, email, estado, rol)
+INSERT INTO Usuario (nombre, nombre_usuario, password, email, estado, rol, fotoPerfilUrl)
 VALUES 
-('Ana García', 'ana_g', 'pass1234', 'ana@email.com', 'activo', 'admin'),
-('Pedro Martínez', 'pedro_dev', 'claveSegura', 'pedro@email.com', 'activo', 'user'),
-('Lucía Fernández', 'lucia_art', 'arte2024', 'lucia@email.com', 'suspendido', 'user');
+('Ana García', 'ana_g', 'pass1234', 'ana@email.com', 'activo', 'admin', 'https://res.cloudinary.com/duuqqcbod/image/upload/v1779028526/knrmqyzgdlxbhhrc7yiu.jpg'),
+('Pedro Martínez', 'pedro_dev', 'claveSegura', 'pedro@email.com', 'activo', 'user', 'https://res.cloudinary.com/duuqqcbod/image/upload/v1779028526/knrmqyzgdlxbhhrc7yiu.jpg'),
+('Lucía Fernández', 'lucia_art', 'arte2024', 'lucia@email.com', 'suspendido', 'user', 'https://res.cloudinary.com/duuqqcbod/image/upload/v1779028526/knrmqyzgdlxbhhrc7yiu.jpg');
 
 
 
-INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio)
+INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio, docUrl)
 VALUES 
-('Python para Principiantes', 'Domina los fundamentos de la programación con Python.', 'Programación', 'Básico', 15.50),
-('Fotografía Profesional', 'Aprende iluminación y composición avanzada.', 'Arte', 'Avanzado', 45.00),
-('Marketing Digital 360', 'Estrategias de SEO, SEM y Redes Sociales.', 'Necios', 'Intermedio', 29.99);
+('Python para Principiantes', 'Domina los fundamentos de la programación con Python.', 'Programación', 'Básico', 15.50, 'https://res.cloudinary.com/duuqqcbod/raw/upload/v1779018791/g0o6qyvuw6ghqopxcgnh.pdf'),
+('Fotografía Profesional', 'Aprende iluminación y composición avanzada.', 'Arte', 'Avanzado', 45.00, 'https://res.cloudinary.com/duuqqcbod/raw/upload/v1779018791/g0o6qyvuw6ghqopxcgnh.pdf'),
+('Marketing Digital 360', 'Estrategias de SEO, SEM y Redes Sociales.', 'Necios', 'Intermedio', 29.99, 'https://res.cloudinary.com/duuqqcbod/raw/upload/v1779018791/g0o6qyvuw6ghqopxcgnh.pdf');
 
 
 

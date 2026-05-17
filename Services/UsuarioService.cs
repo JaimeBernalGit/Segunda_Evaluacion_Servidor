@@ -5,11 +5,12 @@ namespace CursosAPI.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IUploadDocService _uploadDocService;
 
-        public UsuarioService(IUsuarioRepository usuarioRepository)
+        public UsuarioService(IUsuarioRepository usuarioRepository, IUploadDocService uploadDocService)
         {
             _usuarioRepository = usuarioRepository;
-            
+            _uploadDocService = uploadDocService;
         }
 
         public async Task<List<UserDtoOut>> GetAllAsync(string? nombre = null, string? estado = null, DateTime? fechaRegistroDesde = null, DateTime? fechaRegistroHasta = null)
@@ -96,7 +97,19 @@ namespace CursosAPI.Services
                 throw new InvalidOperationException("El correo debe tener un formato válido.");
             }
 
-            await _usuarioRepository.AddAsync(usuario);
+            var fotoPerfilUrl = await _uploadDocService.UploadImageAsync(usuario.FotoPerfil);
+
+            var usuarioIn = new UserInDto
+            {
+                FotoPerfilUrl = fotoPerfilUrl,
+                Nombre = usuario.Nombre,
+                Nombre_Usuario = usuario.Nombre_Usuario,
+                Password = usuario.Password,
+                Correo = usuario.Correo,
+                Rol = usuario.Rol
+            };
+                
+            await _usuarioRepository.AddAsync(usuarioIn);
         }
 
         public async Task UpdateAsync(UpdateUsuarioDTO usuario, int id)
@@ -151,7 +164,18 @@ namespace CursosAPI.Services
                 throw new InvalidOperationException("El estado no puede estar vacío.");
             }
 
-            await _usuarioRepository.UpdateAsync(usuario, id);
+            var fotoPerfilUrl = await _uploadDocService.UploadImageAsync(usuario.FotoPerfil);
+
+            var usuarioIn = new UpdateUsuarioInDTO
+            {
+                FotoPerfilUrl = fotoPerfilUrl,
+                Nombre = usuario.Nombre,
+                Nombre_Usuario = usuario.Nombre_Usuario,
+                Password = usuario.Password,
+                Correo = usuario.Correo,
+            };
+
+            await _usuarioRepository.UpdateAsync(usuarioIn, id);
         }
 
         public async Task DeleteAsync(int id)

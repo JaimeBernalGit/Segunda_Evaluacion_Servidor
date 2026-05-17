@@ -8,7 +8,8 @@ CREATE TABLE Usuario (
     email NVARCHAR(100) NOT NULL UNIQUE,
     fecha_registro DATETIME NOT NULL DEFAULT GETDATE(), 
     estado NVARCHAR(20) DEFAULT 'activo',
-    rol NVARCHAR(10) DEFAULT 'user'
+    rol NVARCHAR(10) DEFAULT 'user',
+    fotoPerfilUrl NVARCHAR(255)
 );
 
 CREATE TABLE Curso (
@@ -18,7 +19,8 @@ CREATE TABLE Curso (
     categoria NVARCHAR(50),
     nivel NVARCHAR(20),
     fecha_creacion DATETIME NOT NULL DEFAULT GETDATE(),
-    precio DECIMAL(10, 2) NOT NULL DEFAULT 0.00 CHECK (precio >= 0)
+    precio DECIMAL(10, 2) NOT NULL DEFAULT 0.00 CHECK (precio >= 0),
+    docUrl NVARCHAR(255)
 );
 
 CREATE TABLE Leccion (

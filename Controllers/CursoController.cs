@@ -51,7 +51,7 @@ namespace CursosAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<ActionResult<Curso>> CreateCurso([FromBody] CursoCreateDTO Curso)
+        public async Task<ActionResult<Curso>> CreateCurso([FromForm] CursoCreateDTO Curso)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace CursosAPI.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> UpdateCurso(int id, [FromBody] CursoUpdateDTO updatedCurso)
+        public async Task<IActionResult> UpdateCurso(int id, [FromForm] CursoUpdateDTO updatedCurso)
         {
 
             if (id <= 0) return BadRequest("El ID no es válido");

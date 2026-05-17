@@ -20,7 +20,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT curso_id, titulo, descripcion, categoria, nivel, fecha_creacion, precio FROM Curso";
+                string query = "SELECT curso_id, titulo, descripcion, categoria, nivel, fecha_creacion, precio, docUrl FROM Curso";
                 using (var command = new SqlCommand(query, connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
@@ -35,8 +35,8 @@ namespace CursosAPI.Repositories
                                 Categoria = reader.GetString(3),
                                 Nivel = reader.GetString(4),
                                 Fecha_Creacion = reader.GetDateTime(5),
-                                Precio = Convert.ToDouble(reader.GetDecimal(6))
-
+                                Precio = Convert.ToDouble(reader.GetDecimal(6)),
+                                DocUrl = reader.GetString(7)
                             };
 
                             Cursos.Add(Curso);
@@ -55,7 +55,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "SELECT curso_id, titulo, descripcion, categoria, nivel, fecha_creacion, precio FROM Curso WHERE curso_id = @curso_id";
+                string query = "SELECT curso_id, titulo, descripcion, categoria, nivel, fecha_creacion, precio, docUrl FROM Curso WHERE curso_id = @curso_id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@curso_id", id);
@@ -72,7 +72,8 @@ namespace CursosAPI.Repositories
                                 Categoria = reader.GetString(3),
                                 Nivel = reader.GetString(4),
                                 Fecha_Creacion = reader.GetDateTime(5),
-                                Precio = Convert.ToDouble(reader.GetDecimal(6))
+                                Precio = Convert.ToDouble(reader.GetDecimal(6)),
+                                DocUrl = reader.GetString(7)
                             };
                         }
                     }
@@ -88,7 +89,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio) VALUES (@titulo, @descripcion, @categoria, @nivel, @precio);";
+                string query = "INSERT INTO Curso (titulo, descripcion, categoria, nivel, precio, docUrl) VALUES (@titulo, @descripcion, @categoria, @nivel, @precio, @docUrl);";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@titulo", Curso.Titulo);
@@ -96,6 +97,7 @@ namespace CursosAPI.Repositories
                     command.Parameters.AddWithValue("@categoria", Curso.Categoria);
                     command.Parameters.AddWithValue("@nivel", Curso.Nivel);
                     command.Parameters.AddWithValue("@precio", Curso.Precio);
+                    command.Parameters.AddWithValue("@docUrl", Curso.DocUrl);
                     await command.ExecuteNonQueryAsync();
                 }
             }
@@ -107,7 +109,7 @@ namespace CursosAPI.Repositories
             {
                 await connection.OpenAsync();
 
-                string query = "UPDATE Curso SET titulo = @titulo, descripcion = @descripcion, categoria = @categoria, nivel = @nivel, precio = @precio WHERE curso_id = @curso_id";
+                string query = "UPDATE Curso SET titulo = @titulo, descripcion = @descripcion, categoria = @categoria, nivel = @nivel, precio = @precio, docUrl = @docUrl WHERE curso_id = @curso_id";
                 using (var command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@curso_id", Curso.Id);
@@ -116,7 +118,7 @@ namespace CursosAPI.Repositories
                     command.Parameters.AddWithValue("@categoria", Curso.Categoria);
                     command.Parameters.AddWithValue("@nivel", Curso.Nivel);
                     command.Parameters.AddWithValue("@precio", Curso.Precio);
-
+                    command.Parameters.AddWithValue("@docUrl", Curso.DocUrl);
                     await command.ExecuteNonQueryAsync();
                 }
             }

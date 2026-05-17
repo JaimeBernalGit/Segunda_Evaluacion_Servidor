@@ -13,11 +13,13 @@ namespace CursosAPI.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IUsuarioRepository _repository;
+        private readonly IUploadDocService _uploadDocService;
 
-        public AuthService(IConfiguration configuration, IUsuarioRepository repository)
+        public AuthService(IConfiguration configuration, IUsuarioRepository repository, IUploadDocService uploadDocService)
         {
             _configuration = configuration;
             _repository = repository;
+            _uploadDocService = uploadDocService;
         }
 
         public async Task<string?> Login(LoginDTO loginDTO) {
@@ -29,7 +31,19 @@ namespace CursosAPI.Services
         }
 
         public async Task<string> Register(RegisterDTO registerDTO) {
-            var usuario = await _repository.AddUserFromCredentials(registerDTO);
+
+            var fotoPerfilUrl = await _uploadDocService.UploadImageAsync(registerDTO.FotoPerfil);
+
+            var usuarioIn = new UserInDto
+            {
+                FotoPerfilUrl = fotoPerfilUrl,
+                Nombre = registerDTO.Nombre,
+                Nombre_Usuario = registerDTO.Nombre_Usuario,
+                Password = registerDTO.Password,
+                Correo = registerDTO.Correo,
+                Rol = Roles.User
+            };
+            var usuario = await _repository.AddUserFromCredentials(usuarioIn);
             return GenerateToken(usuario);
         }
 
