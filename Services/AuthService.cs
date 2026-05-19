@@ -14,20 +14,24 @@ namespace CursosAPI.Services
         private readonly IConfiguration _configuration;
         private readonly IUsuarioRepository _repository;
         private readonly IUploadDocService _uploadDocService;
+        private readonly IFactService _factService;
 
-        public AuthService(IConfiguration configuration, IUsuarioRepository repository, IUploadDocService uploadDocService)
+        public AuthService(IConfiguration configuration, IUsuarioRepository repository, IUploadDocService uploadDocService, IFactService factService)
         {
             _configuration = configuration;
             _repository = repository;
             _uploadDocService = uploadDocService;
+            _factService = factService;
         }
 
-        public async Task<string?> Login(LoginDTO loginDTO) {
+        public async Task<LoginResponseDTO> Login(LoginDTO loginDTO) {
             var usuario = await _repository.GetUserFromCredentials(loginDTO);
             if (usuario == null){
                 throw new UnauthorizedAccessException("Credenciales inválidas");
             }
-            return GenerateToken(usuario);
+            var token = GenerateToken(usuario);
+            var fact = await _factService.GetRandomFactAsync();
+            return new LoginResponseDTO { Token = token, Fact = fact };
         }
 
         public async Task<string> Register(RegisterDTO registerDTO) {

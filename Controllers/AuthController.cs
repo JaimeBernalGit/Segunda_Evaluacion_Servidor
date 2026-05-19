@@ -18,7 +18,7 @@ namespace CursosAPI.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<string>> Login(LoginDTO loginDTO)
+        public async Task<ActionResult<LoginResponseDTO>> Login(LoginDTO loginDTO)
         {
             try
             {

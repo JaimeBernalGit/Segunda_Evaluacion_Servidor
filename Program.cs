@@ -46,6 +46,7 @@ builder.Services.AddScoped<ILeccionService, LeccionService>();
 builder.Services.AddScoped<IPagoService, PagoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUploadDocService, CloudinaryUploadDocService>();
+builder.Services.AddHttpClient<IFactService, FactService>();
 
 // Add services to the container.
 
