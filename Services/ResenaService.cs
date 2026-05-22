@@ -20,27 +20,26 @@ namespace CursosAPI.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<List<Resena>> GetAllAsync(int? calificacion, DateTime? fecha = null)
+        public async Task<List<Resena>> GetAllAsync(int? calificacion, DateTime? fecha = null, string? orderBy = null, bool descending = false)
         {
-
             var resenas = await _resenaRepository.GetAllAsync();
 
             if (calificacion.HasValue)
-            {
-                resenas = resenas
-                    .Where(r => r.Calificacion == calificacion.Value)
-                    .ToList();
-            }
+                resenas = resenas.Where(r => r.Calificacion == calificacion.Value).ToList();
 
             if (fecha.HasValue)
+                resenas = resenas.Where(r => r.FechaPublicacion.Date == fecha.Value.Date).ToList();
+
+            resenas = orderBy?.ToLower() switch
             {
-                resenas = resenas
-                    .Where(r => r.FechaPublicacion.Date == fecha.Value.Date)
-                    .ToList();
-            }
+                "calificacion" => descending ? resenas.OrderByDescending(r => r.Calificacion).ToList()
+                                            : resenas.OrderBy(r => r.Calificacion).ToList(),
+                "fecha"        => descending ? resenas.OrderByDescending(r => r.FechaPublicacion).ToList()
+                                            : resenas.OrderBy(r => r.FechaPublicacion).ToList(),
+                _              => resenas
+            };
 
             return resenas;
-
         }
 
 

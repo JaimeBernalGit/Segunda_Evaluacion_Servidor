@@ -4,7 +4,7 @@ namespace CursosAPI.Services
 {
     public interface IResenaService
     {
-        Task<List<Resena>> GetAllAsync(int? calificacion, DateTime? fecha = null);
+        Task<List<Resena>> GetAllAsync(int? calificacion, DateTime? fecha = null, string? orderBy = null, bool descending = false);
         Task<Resena?> GetByIdAsync(int id);
         Task<List<Resena>> GetByUsuarioAndCursoAsync(int usuarioId, int cursoId);
         Task<List<Resena>> GetByUsuarioAsync(int usuarioId);

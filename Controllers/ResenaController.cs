@@ -25,16 +25,14 @@ namespace ResenasAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Resena>>> GetResenas(
             [FromQuery] int? calificacion,
-            [FromQuery] DateTime? fecha
-            )
-
+            [FromQuery] DateTime? fecha,
+            [FromQuery] string? orderBy,
+            [FromQuery] bool descending = false)
         {
-
-            var Resenas = await _resenaService.GetAllAsync(calificacion, fecha);
-            return Ok(Resenas);
-
+            var resenas = await _resenaService.GetAllAsync(calificacion, fecha, orderBy, descending);
+            return Ok(resenas);
         }
-
+        
         [HttpGet("{id}")]
         [Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<Resena>> GetResenaById(int id)

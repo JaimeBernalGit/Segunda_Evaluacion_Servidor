@@ -13,7 +13,7 @@ namespace CursosAPI.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<List<Inscripcion>> GetAllAsync(string? estado = null, int? progresoMinimo = null, DateTime? fechaDesde = null, DateTime? fechaHasta = null)
+        public async Task<List<Inscripcion>> GetAllAsync(string? estado = null, int? progresoMinimo = null, DateTime? fechaDesde = null, DateTime? fechaHasta = null, string? orderBy = null, bool descending = false)
         {
             var inscripciones = await _inscripcionRepository.GetAllAsync();
 
@@ -24,19 +24,22 @@ namespace CursosAPI.Services
             }
 
             if (progresoMinimo.HasValue)
-            {
                 inscripciones = inscripciones.Where(i => i.ProgresoPorcentaje >= progresoMinimo.Value).ToList();
-            }
 
             if (fechaDesde.HasValue)
-            {
                 inscripciones = inscripciones.Where(i => i.FechaInscripcion.Date >= fechaDesde.Value.Date).ToList();
-            }
 
             if (fechaHasta.HasValue)
-            {
                 inscripciones = inscripciones.Where(i => i.FechaInscripcion.Date <= fechaHasta.Value.Date).ToList();
-            }
+
+            inscripciones = orderBy?.ToLower() switch
+            {
+                "fecha"    => descending ? inscripciones.OrderByDescending(i => i.FechaInscripcion).ToList()
+                                        : inscripciones.OrderBy(i => i.FechaInscripcion).ToList(),
+                "progreso" => descending ? inscripciones.OrderByDescending(i => i.ProgresoPorcentaje).ToList()
+                                        : inscripciones.OrderBy(i => i.ProgresoPorcentaje).ToList(),
+                _          => inscripciones
+            };
 
             return inscripciones;
         }

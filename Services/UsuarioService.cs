@@ -13,7 +13,7 @@ namespace CursosAPI.Services
             _uploadDocService = uploadDocService;
         }
 
-        public async Task<List<UserDtoOut>> GetAllAsync(string? nombre = null, string? estado = null, DateTime? fechaRegistroDesde = null, DateTime? fechaRegistroHasta = null)
+        public async Task<List<UserDtoOut>> GetAllAsync(string? nombre = null, string? estado = null, DateTime? fechaRegistroDesde = null, DateTime? fechaRegistroHasta = null, string? orderBy = null, bool descending = false)
         {
             var usuarios = await _usuarioRepository.GetAllAsync();
 
@@ -30,15 +30,18 @@ namespace CursosAPI.Services
             }
 
             if (fechaRegistroDesde.HasValue)
-            {
                 usuarios = usuarios.Where(u => u.Fecha_Registro.Date >= fechaRegistroDesde.Value.Date).ToList();
-            }
 
             if (fechaRegistroHasta.HasValue)
-            {
                 usuarios = usuarios.Where(u => u.Fecha_Registro.Date <= fechaRegistroHasta.Value.Date).ToList();
-            }
-            
+
+            usuarios = orderBy?.ToLower() switch
+            {
+                "fecha" => descending ? usuarios.OrderByDescending(u => u.Fecha_Registro).ToList()
+                                    : usuarios.OrderBy(u => u.Fecha_Registro).ToList(),
+                _       => usuarios
+            };
+
             return usuarios;
         }
 

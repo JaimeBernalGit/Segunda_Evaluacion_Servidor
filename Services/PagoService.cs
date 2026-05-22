@@ -20,13 +20,18 @@ namespace CursosAPI.Services
             _usuarioRepository = usuarioRepository;
         }
 
-        public async Task<List<Pago>> GetAllAsync()
+        public async Task<List<Pago>> GetAllAsync(string? orderBy = null, bool descending = false)
         {
+            var pagos = await _pagoRepository.GetAllAsync();
 
-            var Pagos = await _pagoRepository.GetAllAsync();
+            pagos = orderBy?.ToLower() switch
+            {
+                "cantidad" => descending ? pagos.OrderByDescending(p => p.Cantidad).ToList()
+                                        : pagos.OrderBy(p => p.Cantidad).ToList(),
+                _          => pagos
+            };
 
-            return Pagos;
-
+            return pagos;
         }
 
 

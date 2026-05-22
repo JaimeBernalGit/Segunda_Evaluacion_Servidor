@@ -24,14 +24,12 @@ namespace CursosAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Curso>>> GetCursos(
             [FromQuery] string? titulo,
-            [FromQuery] string? categoria
-            )
-
+            [FromQuery] string? categoria,
+            [FromQuery] string? orderBy,
+            [FromQuery] bool descending = false)
         {
-
-            var cursos = await _cursoService.GetAllAsync(titulo, categoria);
+            var cursos = await _cursoService.GetAllAsync(titulo, categoria, orderBy, descending);
             return Ok(cursos);
-
         }
 
         [HttpGet("{id}")]

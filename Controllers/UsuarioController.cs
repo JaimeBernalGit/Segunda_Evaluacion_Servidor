@@ -27,10 +27,11 @@ namespace CursosAPI.Controllers
             [FromQuery] string? nombre,
             [FromQuery] string? estado,
             [FromQuery] DateTime? fechaRegistroDesde,
-            [FromQuery] DateTime? fechaRegistroHasta
-        )
+            [FromQuery] DateTime? fechaRegistroHasta,
+            [FromQuery] string? orderBy,
+            [FromQuery] bool descending = false)
         {
-            var usuarios = await _service.GetAllAsync(nombre, estado, fechaRegistroDesde, fechaRegistroHasta);
+            var usuarios = await _service.GetAllAsync(nombre, estado, fechaRegistroDesde, fechaRegistroHasta, orderBy, descending);
             return Ok(usuarios);
         }
 

@@ -16,12 +16,10 @@ namespace CursosAPI.Services
             _uploadDocService = uploadDocService;
         }
 
-        public async Task<List<Curso>> GetAllAsync(string? titulo = null, string? categoria = null)
+        public async Task<List<Curso>> GetAllAsync(string? titulo = null, string? categoria = null, string? orderBy = null, bool descending = false)
         {
-
             var cursos = await _cursoRepository.GetAllAsync();
 
-            //StringComparison.OrdinalIgnoreCase evita problemas con mayusculas y minusculas
             if (!string.IsNullOrEmpty(titulo))
             {
                 titulo = titulo.Trim();
@@ -34,6 +32,14 @@ namespace CursosAPI.Services
                 cursos = cursos.Where(c => c.Categoria.Equals(categoria, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
+            cursos = orderBy?.ToLower() switch
+            {
+                "precio" => descending ? cursos.OrderByDescending(c => c.Precio).ToList()
+                                    : cursos.OrderBy(c => c.Precio).ToList(),
+                "fecha"  => descending ? cursos.OrderByDescending(c => c.Fecha_Creacion).ToList()
+                                    : cursos.OrderBy(c => c.Fecha_Creacion).ToList(),
+                _        => cursos
+            };
 
             return cursos;
 

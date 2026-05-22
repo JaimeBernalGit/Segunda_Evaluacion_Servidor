@@ -21,10 +21,12 @@ namespace CursosAPI.Controllers
 
         [HttpGet]
         [Authorize(Roles = Roles.Admin)]
-        public async Task<ActionResult<List<Pago>>> GetPagos()
+        public async Task<ActionResult<List<Pago>>> GetPagos(
+            [FromQuery] string? orderBy,
+            [FromQuery] bool descending = false)
         {
-            var Pagos = await _pagoService.GetAllAsync();
-            return Ok(Pagos);
+            var pagos = await _pagoService.GetAllAsync(orderBy, descending);
+            return Ok(pagos);
         }
 
 

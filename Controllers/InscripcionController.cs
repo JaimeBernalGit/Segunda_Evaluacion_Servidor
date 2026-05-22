@@ -25,10 +25,11 @@ namespace CursosAPI.Controllers
             [FromQuery] string? estado,
             [FromQuery] int? progresoMinimo,
             [FromQuery] DateTime? fechaDesde,
-            [FromQuery] DateTime? fechaHasta
-        )
+            [FromQuery] DateTime? fechaHasta,
+            [FromQuery] string? orderBy,
+            [FromQuery] bool descending = false)
         {
-            var inscripciones = await _service.GetAllAsync(estado, progresoMinimo, fechaDesde, fechaHasta);
+            var inscripciones = await _service.GetAllAsync(estado, progresoMinimo, fechaDesde, fechaHasta, orderBy, descending);
             return Ok(inscripciones);
         }
         
