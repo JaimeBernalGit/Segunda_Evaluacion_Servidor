@@ -6,40 +6,56 @@ services:
     image: jaimebg/cursos-api:latest
     container_name: cursos_api_container
     ports:
-      - "8302:8080"
+      - "9689:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__GestionCursosDB=Server=sqlserver;Database=GestionCursosDB;User Id=sa;Password=TuPasswordFuerte123!;TrustServerCertificate=True;
-      - AdminSettings__ApiKey=SecretoSuperSeguro123!
+      - JWT__ValidAudience=https://localhost:7000
+      - JWT__ValidIssuer=https://localhost:9689
+      - JWT__SecretKey=MyPass@word2MyPass@word2MyPass@word2
+      - CloudinarySettings__ApiKey=378882352666741
+      - CloudinarySettings__ApiSecret=7UmZjIRFppjHrNHxgWaEEXgMgDU
+      - CloudinarySettings__CloudName=duuqqcbod
     depends_on:
-      - sqlserver
+      - db-init
     networks:
       - backend 
     restart: unless-stopped
-
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: sqlserver_practica
     ports:
-      - "2038:1433" 
+      - "9869:1433" 
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=TuPasswordFuerte123!
       - MSSQL_PID=Express
     volumes:
-    # los datos de la base de datos se guardan en el volumen
-    # /var/opt/mssql es la carpeta interna del contenedor de Linux donde SQL Server guarda físicamente todos tus datos
-      - sqlserver_data:/var/opt/mssql 
+      - sqlserver_data:/var/opt/mssql
     networks:
-      - backend # La metemos en la misma red para que se vean
+      - backend
     restart: unless-stopped
 
-# DEFINICIÓN DE REDES
+  db-init:
+    image: mcr.microsoft.com/mssql-tools
+    container_name: db_init_container
+    depends_on:
+      - sqlserver
+    volumes:
+      - ./init.sql:/init.sql
+    command: >
+      /bin/bash -c "
+      echo 'Esperando a que SQL Server arranque...' &&
+      sleep 20 &&
+      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P TuPasswordFuerte123! -i /init.sql &&
+      echo 'Base de datos inicializada correctamente'"
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
 
-
 volumes:
-  sqlserver_data: 
+  sqlserver_data:
