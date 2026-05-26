@@ -98,6 +98,7 @@ namespace CursosAPI.Repositories
                     command.Parameters.AddWithValue("@fecha_registro", DateTime.Now);
                     command.Parameters.AddWithValue("@estado", "Inactivo");
                     command.Parameters.AddWithValue("@rol", usuario.Rol);
+                    command.Parameters.AddWithValue("@fotoPerfilUrl", usuario.FotoPerfilUrl);
 
                     await command.ExecuteNonQueryAsync();
                 }
