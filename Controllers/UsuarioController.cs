@@ -70,26 +70,14 @@ namespace CursosAPI.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateUsuario(int id,[FromForm] UpdateUsuarioDTO updatedUsuario)
+        public async Task<IActionResult> UpdateUsuario(int id, [FromForm] UpdateUsuarioDTO updatedUsuario)
         {
             if (!_authService.HasAccessToResource(id, User))
                 return Forbid();
-            
-            var existingUsuario = await _service.GetByIdAsync(id);
-            if (existingUsuario == null)
-            {
-                return NotFound();
-            }
-            var existingUsuarioDTO = new UpdateUsuarioDTO();
-            existingUsuarioDTO.Correo = updatedUsuario.Correo;
-            existingUsuarioDTO.Estado = updatedUsuario.Estado;
-            existingUsuarioDTO.Nombre_Usuario = updatedUsuario.Nombre_Usuario;
-            existingUsuarioDTO.Nombre = updatedUsuario.Nombre;
-            existingUsuarioDTO.Password = updatedUsuario.Password;
 
             try
             {
-                await _service.UpdateAsync(existingUsuarioDTO, existingUsuario.Id);
+                await _service.UpdateAsync(updatedUsuario, id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

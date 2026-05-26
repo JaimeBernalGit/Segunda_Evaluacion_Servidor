@@ -176,6 +176,7 @@ namespace CursosAPI.Services
                 Nombre_Usuario = usuario.Nombre_Usuario,
                 Password = usuario.Password,
                 Correo = usuario.Correo,
+                Estado = usuario.Estado
             };
 
             await _usuarioRepository.UpdateAsync(usuarioIn, id);
