@@ -99,6 +99,8 @@ namespace ResenasAPI.Controllers
         [Authorize]
         public async Task<ActionResult<Resena>> CreateResena([FromBody] ResenaCreateDTO Resena)
         {
+            if (!_authService.HasAccessToOwnResource(Resena.UsuarioId, User))
+                return Forbid();
             try
             {
                 await _resenaService.AddAsync(Resena);
@@ -114,7 +116,8 @@ namespace ResenasAPI.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateResena(int id, [FromBody] ResenaUpdateDTO updatedResena)
         {
-            if (!_authService.HasAccessToOwnResource(id, User))
+            var Resena = await _resenaService.GetByIdAsync(id);
+            if (!_authService.HasAccessToOwnResource(Resena.Usuario.Id, User))
                 return Forbid();
 
             try
@@ -133,10 +136,12 @@ namespace ResenasAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize]
         public async Task<IActionResult> DeleteResena(int id)
         {
-            
+            var Resena = await _resenaService.GetByIdAsync(id);
+            if (!_authService.HasAccessToResource(Resena.Usuario.Id, User))
+                return Forbid();
             try
             {
                 await _resenaService.DeleteAsync(id);
