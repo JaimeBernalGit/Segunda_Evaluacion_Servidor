@@ -94,7 +94,7 @@ namespace CursosAPI.Repositories
                     command.Parameters.AddWithValue("@curso_id", inscripcion.CursoId);
                     command.Parameters.AddWithValue("@fecha_inscripcion", DateTime.Now);
                     command.Parameters.AddWithValue("@progreso_porcentaje", 0);
-                    command.Parameters.AddWithValue("@estado", "Inactivo");
+                    command.Parameters.AddWithValue("@estado", "Cursando");
 
                     await command.ExecuteNonQueryAsync();
                 }
